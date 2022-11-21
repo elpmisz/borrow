@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: borrow-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ../src:/var/www
+
+  server:
+    image: nginx:alpine
+    container_name: borrow-server
+    restart: unless-stopped
+    ports:
+      - 7000:80
+    volumes:
+      - ../src:/var/www
+      - ./nginx:/etc/nginx/conf.d
+
+  database:
+    image: mariadb:latest
+    container_name: borrow-database
+    restart: unless-stopped
+    ports:
+      - 3307:3306
+    command: ['--sql_mode=']
+    environment:
+      MARIADB_ROOT_PASSWORD: P@ssw0rd#db
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: borrow-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 7001:80
+    environment:
+      PMA_HOST: database
+  
