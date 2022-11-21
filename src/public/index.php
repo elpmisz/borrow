@@ -8,6 +8,9 @@ $Router->map("GET", "/", function () {
 $Router->map("GET", "/home", function () {
   require(__DIR__ . "/views/home/index.php");
 });
+$Router->map("GET", "/item", function () {
+  require(__DIR__ . "/views/home/item.php");
+});
 $Router->map("GET", "/error", function () {
   require(__DIR__ . "/views/home/error.php");
 });
@@ -93,6 +96,14 @@ $Router->map("GET", "/borrow/item", function () {
 // $Router->map("POST", "/borrow/[**:params]", function ($params) {
 //   require(__DIR__ . "/views/borrow/action.php");
 // });
+
+
+$Router->map("POST", "/provinceitem", function () {
+  require(__DIR__ . "/views/home/data_item_province.php");
+});
+$Router->map("POST", "/zoneitem", function () {
+  require(__DIR__ . "/views/home/data_item_zone.php");
+});
 
 
 $match = $Router->match();

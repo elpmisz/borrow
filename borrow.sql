@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.7
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Nov 18, 2022 at 04:33 PM
--- Server version: 10.6.5-MariaDB-log
--- PHP Version: 5.6.40
+-- Host: database
+-- Generation Time: Nov 21, 2022 at 01:30 PM
+-- Server version: 10.9.3-MariaDB-1:10.9.3+maria~ubu2204
+-- PHP Version: 8.0.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -764,6 +763,27 @@ CREATE TABLE `user_item` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `user_item`
+--
+
+INSERT INTO `user_item` (`id`, `user_id`, `text`, `item_id`, `amount`, `remark`, `status`, `created`) VALUES
+(1, 37, '', 214, 6, '', 1, '2022-11-21 12:35:25'),
+(2, 37, '', 215, 3, '', 1, '2022-11-21 12:35:25'),
+(3, 37, '', 216, 16, '', 1, '2022-11-21 12:35:25'),
+(4, 38, '', 214, 14, '', 1, '2022-11-21 12:36:32'),
+(5, 38, '', 215, 2, '', 1, '2022-11-21 12:36:32'),
+(6, 38, '', 216, 6, '', 1, '2022-11-21 12:36:32'),
+(7, 39, '', 214, 7, '', 1, '2022-11-21 12:37:07'),
+(8, 39, '', 215, 15, '', 1, '2022-11-21 12:37:07'),
+(9, 39, '', 216, 15, '', 1, '2022-11-21 12:37:07'),
+(10, 43, '', 214, 11, '', 1, '2022-11-21 12:38:08'),
+(11, 43, '', 215, 10, '', 1, '2022-11-21 12:38:08'),
+(12, 43, '', 216, 17, '', 1, '2022-11-21 12:38:08'),
+(13, 6, '', 214, 16, '', 1, '2022-11-21 12:40:29'),
+(14, 6, '', 215, 9, '', 1, '2022-11-21 12:40:29'),
+(15, 6, '', 216, 16, '', 1, '2022-11-21 12:40:29');
+
 -- --------------------------------------------------------
 
 --
@@ -953,7 +973,7 @@ ALTER TABLE `user_detail`
 -- AUTO_INCREMENT for table `user_item`
 --
 ALTER TABLE `user_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `user_login`

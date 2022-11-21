@@ -1,6 +1,6 @@
 <?php
-$page = "index";
-$group = "";
+$page = "borrow";
+$group = "report";
 
 include_once(__DIR__ . "/../../includes/header.php");
 include_once(__DIR__ . "/../../includes/sidebar.php");

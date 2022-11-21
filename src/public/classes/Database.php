@@ -8,9 +8,9 @@ use PDOException;
 class Database
 {
   private $dbCon = null;
-  private $dbHost = "localhost";
+  private $dbHost = "database";
   private $dbUser = "root";
-  private $dbPass = "Admin@cpl2017";
+  private $dbPass = "P@ssw0rd#db";
   private $dbName = "borrow";
   private $dbChar = "utf8";
   private $dbOptions = [

@@ -1,7 +1,7 @@
 <?php
-$dbhost = "localhost";
+$dbhost = "database";
 $dbuser = "root";
-$dbpass = "Admin@cpl2017";
+$dbpass = "P@ssw0rd#db";
 $dbname = "borrow";
 $dbchar = "utf8";
 
