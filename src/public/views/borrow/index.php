@@ -28,7 +28,7 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
 
             <div class="col-xl-3 col-md-6 mb-2">
               <a href="/borrow/request" class="btn btn-danger btn-sm w-100">
-                <i class="fa fa-plus pe-2"></i>เพิ่ม
+                <i class="fa fa-plus pe-2"></i>ใช้บริการ
               </a>
             </div>
           </div>

@@ -20,19 +20,15 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
             <div class="row mb-2">
               <label class="col-xl-4 col-md-4 col-form-label text-xl-end">รหัสหน่วยงาน</label>
               <div class="col-xl-2 col-md-8">
-                <div class="input-group">
-                  <input type="text" class="form-control form-control-sm" name="login" required>
-                </div>
+                <input type="text" class="form-control form-control-sm" name="login" required>
               </div>
             </div>
             <div class="row mb-2">
               <label class="col-xl-4 col-md-4 col-form-label text-xl-end">หน่วยงาน</label>
               <div class="col-xl-8 col-md-8">
-                <div class="input-group">
-                  <input type="text" class="form-control form-control-sm" name="name" required>
-                  <div class="invalid-feedback">
-                    กรุณากรอกช่องนี้.
-                  </div>
+                <input type="text" class="form-control form-control-sm" name="name" required>
+                <div class="invalid-feedback">
+                  กรุณากรอกช่องนี้.
                 </div>
               </div>
             </div>

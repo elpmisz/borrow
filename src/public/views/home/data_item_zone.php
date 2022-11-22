@@ -23,7 +23,7 @@ $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
 $draw = (isset($_POST['draw']) ? $_POST['draw'] : "");
 
 $sql = "SELECT D.name item_name,D.unit item_unit,SUM(A.amount) total,
-C.zone_id,CONCAT('เขต ',C.zone_id) zone_name
+CONCAT(C.zone_id,'/',A.item_id) zone_id,CONCAT('เขต ',C.zone_id) zone_name
 FROM user_item A
 LEFT JOIN user_detail B 
 ON A.user_id = B.id

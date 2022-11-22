@@ -35,9 +35,7 @@ $row = $Items->item_fetch([$id]);
             <div class="row mb-2">
               <label class="col-xl-4 col-md-4 col-form-label text-xl-end">ชื่อ</label>
               <div class="col-xl-4 col-md-8">
-                <div class="input-group">
-                  <input type="text" class="form-control form-control-sm" name="name" value="<?php echo $row['name'] ?>" required>
-                </div>
+                <input type="text" class="form-control form-control-sm" name="name" value="<?php echo $row['name'] ?>" required>
               </div>
             </div>
             <div class="row mb-2">

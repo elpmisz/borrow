@@ -34,8 +34,8 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
                       <tr>
                         <th width="5%">#</th>
                         <th width="45%">อุปกรณ์</th>
-                        <th width="10%">หน่วยนับ</th>
                         <th width="10%">จำนวน</th>
+                        <th width="10%">หน่วยนับ</th>
                         <th width="30%">หมายเหตุ</th>
                       </tr>
                     </thead>
@@ -49,11 +49,11 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
                         <tr>
                           <td class="text-center"><?php echo $key ?></td>
                           <td><?php echo $item['item_name'] ?></td>
-                          <td class="text-center"><?php echo $item['item_unit'] ?></td>
                           <td>
                             <input type="hidden" name="item__id[]" value="<?php echo $item['item_id'] ?>">
                             <input type="number" class="form-control form-control-sm text-center" name="item__amount[]" min="1" value="<?php echo $item['item_amount'] ?>">
                           </td>
+                          <td class="text-center"><?php echo $item['item_unit'] ?></td>
                           <td>
                             <input type="text" class="form-control form-control-sm" name="item__remark[]" value="<?php echo $item['item_remark'] ?>">
                           </td>
@@ -67,11 +67,11 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
                         <td>
                           <select class="form-select form-select-sm item" name="item_id[]" data-placeholder="-- เลือก --"></select>
                         </td>
-                        <td class="text-center">
-                          <span class="unit"></span>
-                        </td>
                         <td>
                           <input type="number" class="form-control form-control-sm text-center amount" name="item_amount[]" min="1">
+                        </td>
+                        <td class="text-center">
+                          <span class="unit"></span>
                         </td>
                         <td>
                           <input type="text" class="form-control form-control-sm" name="item_remark[]">
@@ -133,7 +133,6 @@ include_once(__DIR__ . "/../../includes/footer.php");
   $(document).on("change", ".item", function() {
     let _this = $(this);
     let item = $(this).val();
-    console.log(item)
     $.ajax({
       url: '/users/itemdetail',
       method: 'POST',

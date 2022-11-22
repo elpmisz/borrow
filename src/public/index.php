@@ -84,18 +84,18 @@ $Router->map("GET", "/borrow/manage", function () {
 $Router->map("GET", "/borrow/item", function () {
   require(__DIR__ . "/views/borrow/item.php");
 });
+$Router->map("GET", "/borrow/request", function () {
+  require(__DIR__ . "/views/borrow/request.php");
+});
 // $Router->map("POST", "/borrow/data", function () {
 //   require(__DIR__ . "/views/borrow/data.php");
-// });
-// $Router->map("GET", "/borrow/request", function () {
-//   require(__DIR__ . "/views/borrow/request.php");
 // });
 // $Router->map("GET", "/borrow/view/[**:params]", function ($params) {
 //   require(__DIR__ . "/views/borrow/view.php");
 // });
-// $Router->map("POST", "/borrow/[**:params]", function ($params) {
-//   require(__DIR__ . "/views/borrow/action.php");
-// });
+$Router->map("POST", "/borrow/[**:params]", function ($params) {
+  require(__DIR__ . "/views/borrow/action.php");
+});
 
 
 $Router->map("POST", "/provinceitem", function () {
@@ -103,6 +103,9 @@ $Router->map("POST", "/provinceitem", function () {
 });
 $Router->map("POST", "/zoneitem", function () {
   require(__DIR__ . "/views/home/data_item_zone.php");
+});
+$Router->map("POST", "/dashboard/[**:params]", function ($params) {
+  require(__DIR__ . "/views/home/action_dashboard.php");
 });
 
 

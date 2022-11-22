@@ -1,5 +1,6 @@
 <?php
 
+use app\classes\Dashboard;
 use app\classes\Item;
 use app\classes\System;
 use app\classes\User;
@@ -14,6 +15,7 @@ $user_id = (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "");
 $Systems = new System();
 $Users = new User();
 $Items = new Item();
+$Dashboards = new Dashboard();
 
 $system = $Systems->fetch();
 $user = $Users->user_id_fetch([$user_id]);

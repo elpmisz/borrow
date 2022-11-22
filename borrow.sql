@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Nov 21, 2022 at 01:30 PM
--- Server version: 10.9.3-MariaDB-1:10.9.3+maria~ubu2204
--- PHP Version: 8.0.24
+-- Generation Time: Nov 22, 2022 at 09:55 AM
+-- Server version: 10.10.2-MariaDB-1:10.10.2+maria~ubu2204
+-- PHP Version: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,7 +36,7 @@ CREATE TABLE `item` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `item`
@@ -500,9 +500,7 @@ INSERT INTO `item` (`id`, `name`, `type`, `reference`, `unit`, `status`, `update
 (491, 'Rescue Tripod', 2, 124, 'ชุด', 1, NULL, '2022-11-17 08:51:00'),
 (492, 'Rescue Tripod', 2, 124, 'ชุด', 1, NULL, '2022-11-17 08:51:00'),
 (493, 'ชุดเครื่องมือ/อุปกรณ์กู้ภัยด้วยเชือก', 2, 124, 'ชุด', 1, NULL, '2022-11-17 08:51:00'),
-(494, 'ชุดเครื่องมือ/อุปกรณ์กู้ภัยทางสูงในอาคาร', 2, 124, 'ชุด', 1, NULL, '2022-11-17 08:51:00'),
-(495, 'test', 1, 0, '', 1, NULL, '2022-11-17 09:17:46'),
-(496, 'testtest', 2, 495, 'test', 1, '2022-11-17 16:53:48', '2022-11-17 09:19:04');
+(494, 'ชุดเครื่องมือ/อุปกรณ์กู้ภัยทางสูงในอาคาร', 2, 124, 'ชุด', 1, NULL, '2022-11-17 08:51:00');
 
 -- --------------------------------------------------------
 
@@ -519,7 +517,7 @@ CREATE TABLE `province` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `province`
@@ -607,6 +605,42 @@ INSERT INTO `province` (`id`, `code`, `name`, `name_en`, `zone_id`, `status`, `u
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `request`
+--
+
+CREATE TABLE `request` (
+  `id` int(11) NOT NULL,
+  `type` int(1) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime NOT NULL,
+  `text` text NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `request_item`
+--
+
+CREATE TABLE `request_item` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `confirm` int(11) NOT NULL,
+  `location` varchar(50) NOT NULL,
+  `text` text NOT NULL,
+  `remark` text NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `setting`
 --
 
@@ -618,7 +652,7 @@ CREATE TABLE `setting` (
   `default_password` varchar(50) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `updated` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `setting`
@@ -642,7 +676,7 @@ CREATE TABLE `user_detail` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_detail`
@@ -761,7 +795,7 @@ CREATE TABLE `user_item` (
   `remark` varchar(200) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_item`
@@ -798,7 +832,7 @@ CREATE TABLE `user_login` (
   `level` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_login`
@@ -920,6 +954,18 @@ ALTER TABLE `province`
   ADD KEY `province_code` (`code`);
 
 --
+-- Indexes for table `request`
+--
+ALTER TABLE `request`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `request_item`
+--
+ALTER TABLE `request_item`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `setting`
 --
 ALTER TABLE `setting`
@@ -955,13 +1001,25 @@ ALTER TABLE `user_login`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=497;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=498;
 
 --
 -- AUTO_INCREMENT for table `province`
 --
 ALTER TABLE `province`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+
+--
+-- AUTO_INCREMENT for table `request`
+--
+ALTER TABLE `request`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `request_item`
+--
+ALTER TABLE `request_item`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user_detail`
