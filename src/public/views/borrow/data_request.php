@@ -8,11 +8,11 @@ require_once(__DIR__ . "/../../vendor/autoload.php");
 
 $user_id = (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "");
 
-$stmt = $dbcon->prepare("SELECT COUNT(*) FROM item");
+$stmt = $dbcon->prepare("SELECT COUNT(*) FROM request WHERE user_id = {$user_id}");
 $stmt->execute();
 $count = $stmt->fetchColumn();
 
-$column = ["A.status", "A.name", "A.reference", "A.unit"];
+$column = ["A.id", "A.id", "A.id", "A.id"];
 
 $status = (isset($_POST['status']) ? intval($_POST['status']) : "");
 
@@ -24,23 +24,27 @@ $limit_start = (isset($_POST['start']) ? $_POST['start'] : "");
 $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
 $draw = (isset($_POST['draw']) ? $_POST['draw'] : "");
 
-$sql = "SELECT A.id item_id,CONCAT('[',A.id,'] ',A.name) item_name,A.unit item_unit,A.status item_status,
-A.reference reference_id,B.name reference_name,
-IF(A.status = 1,'รายละเอียด','ระงับการใช้งาน') status_name,
-IF(A.status = 1,'success','danger') status_color
-FROM item A 
-LEFT JOIN item B
-ON A.reference = B.id ";
-
+$sql = "SELECT A.id request_id,A.text,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,B.name user_name,
+GROUP_CONCAT(CONCAT(D.name,' [ ',C.amount,' ',D.unit,' ]')) item,
+CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ', DATE_FORMAT(A.end, '%d/%m/%Y')) date,
+DATE_FORMAT(A.created, '%d/%m/%Y - %H:%i น.') created
+FROM request A
+LEFT JOIN user_detail B
+ON A.user_id = B.id
+LEFT JOIN request_item C
+ON A.id = C.request_id
+LEFT JOIN item D
+ON C.item_id = D.id
+WHERE A.user_id = {$user_id} ";
 
 if ($keyword) {
-  $sql .= " AND (A.name LIKE '%{$keyword}%' OR B.name LIKE '%{$keyword}%') ";
+  $sql .= " AND (A.text LIKE '%{$keyword}%' OR D.name LIKE '%{$keyword}%') ";
 }
 
 if ($order) {
   $sql .= "ORDER BY {$column[$order_column]} {$order_dir} ";
 } else {
-  $sql .= "ORDER BY A.status ASC, A.type ASC, A.reference ASC ";
+  $sql .= "ORDER BY A.id DESC ";
 }
 
 $query = "";
@@ -57,12 +61,14 @@ $result = $stmt->fetchAll();
 
 $data = [];
 foreach ($result as $row) {
-  $status = "<a href='/items/view/{$row['item_id']}' class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</a>";
+  $status = "test";
   $data[] = [
     "0" => $status,
-    "1" => $row['item_name'],
-    "2" => $row['reference_name'],
-    "3" => $row['item_unit'],
+    "1" => $row['text'],
+    "2" => $row['type_name'],
+    "3" => str_replace(",", "<br>", $row['item']),
+    "4" => str_replace("-", ",<br>", $row['date']),
+    "5" => str_replace("-", ",<br>", $row['created']),
   ];
 }
 

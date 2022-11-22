@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Nov 22, 2022 at 09:55 AM
--- Server version: 10.10.2-MariaDB-1:10.10.2+maria~ubu2204
--- PHP Version: 8.0.25
+-- Generation Time: Nov 22, 2022 at 02:20 PM
+-- Server version: 10.9.3-MariaDB-1:10.9.3+maria~ubu2204
+-- PHP Version: 8.0.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,7 +36,7 @@ CREATE TABLE `item` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `item`
@@ -517,7 +517,7 @@ CREATE TABLE `province` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `province`
@@ -612,13 +612,20 @@ CREATE TABLE `request` (
   `id` int(11) NOT NULL,
   `type` int(1) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `start` datetime NOT NULL,
-  `end` datetime NOT NULL,
+  `start` date NOT NULL,
+  `end` date NOT NULL,
   `text` text NOT NULL,
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `request`
+--
+
+INSERT INTO `request` (`id`, `type`, `user_id`, `start`, `end`, `text`, `status`, `updated`, `created`) VALUES
+(1, 1, 37, '2022-11-01', '2022-11-30', 'ทดสอบระบบ', 1, NULL, '2022-11-22 13:00:42');
 
 -- --------------------------------------------------------
 
@@ -636,7 +643,16 @@ CREATE TABLE `request_item` (
   `text` text NOT NULL,
   `remark` text NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `request_item`
+--
+
+INSERT INTO `request_item` (`id`, `request_id`, `item_id`, `amount`, `confirm`, `location`, `text`, `remark`, `created`) VALUES
+(1, 1, 214, 2, 2, '13.834473772846527, 100.63082344588064', '', '', '2022-11-22 13:00:42'),
+(2, 1, 215, 2, 2, '13.834473772846527, 100.63082344588064', '', '', '2022-11-22 13:00:42'),
+(3, 1, 216, 2, 2, '13.834473772846527, 100.63082344588064', '', '', '2022-11-22 13:00:42');
 
 -- --------------------------------------------------------
 
@@ -652,7 +668,7 @@ CREATE TABLE `setting` (
   `default_password` varchar(50) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `updated` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `setting`
@@ -676,7 +692,7 @@ CREATE TABLE `user_detail` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_detail`
@@ -795,7 +811,7 @@ CREATE TABLE `user_item` (
   `remark` varchar(200) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_item`
@@ -832,7 +848,7 @@ CREATE TABLE `user_login` (
   `level` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_login`
@@ -1013,13 +1029,13 @@ ALTER TABLE `province`
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `request_item`
 --
 ALTER TABLE `request_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_detail`

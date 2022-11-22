@@ -87,13 +87,19 @@ $Router->map("GET", "/borrow/item", function () {
 $Router->map("GET", "/borrow/request", function () {
   require(__DIR__ . "/views/borrow/request.php");
 });
-// $Router->map("POST", "/borrow/data", function () {
-//   require(__DIR__ . "/views/borrow/data.php");
-// });
-// $Router->map("GET", "/borrow/view/[**:params]", function ($params) {
-//   require(__DIR__ . "/views/borrow/view.php");
-// });
+$Router->map("POST", "/borrow/datarequest", function () {
+  require(__DIR__ . "/views/borrow/data_request.php");
+});
+$Router->map("POST", "/borrow/dataapprove", function () {
+  require(__DIR__ . "/views/borrow/data_approve.php");
+});
+$Router->map("GET", "/borrow/view/[**:params]", function ($params) {
+  require(__DIR__ . "/views/borrow/view.php");
+});
 $Router->map("POST", "/borrow/[**:params]", function ($params) {
+  require(__DIR__ . "/views/borrow/action.php");
+});
+$Router->map("GET", "/borrow/[**:params]", function ($params) {
   require(__DIR__ . "/views/borrow/action.php");
 });
 

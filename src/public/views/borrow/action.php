@@ -11,9 +11,9 @@ date_default_timezone_set("Asia/Bangkok");
 require_once(__DIR__ . "/../../vendor/autoload.php");
 
 $param = (isset($params) ? explode("/", $params) : header("Location: /error"));
-$action = (isset($param[0]) ? $param[0] : "");
-$param1 = (isset($param[1]) ? $param[1] : "");
-$param2 = (isset($param[2]) ? $param[2] : "");
+$action = (!empty($param[0]) ? $param[0] : "");
+$param1 = (!empty($param[1]) ? $param[1] : "");
+$param2 = (!empty($param[2]) ? $param[2] : "");
 
 $user_id = (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "");
 
@@ -39,9 +39,32 @@ if ($action === "add") :
         $location = (isset($_POST['item_location'][$key]) ? $_POST['item_location'][$key] : "");
         $text = (isset($_POST['item_text'][$key]) ? $_POST['item_text'][$key] : "");
 
-        $Borrow->item_insert([$request_id, $item_id, $item_amount, $location, $text]);
+        $Borrow->item_insert([$request_id, $item_id, $item_amount, $item_amount, $location, $text]);
       endforeach;
     endif;
+
+    $Validation->alert("success", "เพิ่มข้อมูลเรียบร้อย", "/borrow/view/{$request_id}");
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+endif;
+
+if ($action === "update") :
+  try {
+    echo "<pre>";
+    print_r($_POST);
+    die();
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+endif;
+
+if ($action === "itemdelete") :
+  try {
+    $item_id = (!empty($param1) ? $param1 : "");
+    $request_id = (!empty($param2) ? $param2 : "");
+
+    $Validation->alert("success", "ปรับปรุงข้อมูลเรียบร้อย", "/borrow/view/{$request_id}");
   } catch (PDOException $e) {
     die($e->getMessage());
   }

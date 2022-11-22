@@ -1,5 +1,6 @@
 <?php
 
+use app\classes\Borrow;
 use app\classes\Dashboard;
 use app\classes\Item;
 use app\classes\System;
@@ -15,6 +16,7 @@ $user_id = (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "");
 $Systems = new System();
 $Users = new User();
 $Items = new Item();
+$Borrows = new Borrow();
 $Dashboards = new Dashboard();
 
 $system = $Systems->fetch();
