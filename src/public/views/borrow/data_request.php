@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -27,7 +28,21 @@ $draw = (isset($_POST['draw']) ? $_POST['draw'] : "");
 $sql = "SELECT A.id request_id,A.text,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,B.name user_name,
 GROUP_CONCAT(CONCAT(D.name,' [ ',C.amount,' ',D.unit,' ]')) item,
 CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ', DATE_FORMAT(A.end, '%d/%m/%Y')) date,
-DATE_FORMAT(A.created, '%d/%m/%Y - %H:%i น.') created
+DATE_FORMAT(A.created, '%d/%m/%Y - %H:%i น.') created,
+CASE A.status
+  WHEN 1 THEN 'รออนุมัติ'
+  WHEN 2 THEN 'รอรับคืน'
+  WHEN 3 THEN 'ดำเนินการเรียบร้อยแล้ว'
+  WHEN 4 THEN 'ยกเลิก'
+  ELSE NULL
+END status_name,
+CASE A.status
+  WHEN 1 THEN 'primary'
+  WHEN 2 THEN 'primary'
+  WHEN 3 THEN 'success'
+  WHEN 4 THEN 'danger'
+  ELSE NULL
+END status_color
 FROM request A
 LEFT JOIN user_detail B
 ON A.user_id = B.id
@@ -61,7 +76,7 @@ $result = $stmt->fetchAll();
 
 $data = [];
 foreach ($result as $row) {
-  $status = "test";
+  $status = "<a href='/borrow/view/{$row['request_id']}'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
   $data[] = [
     "0" => $status,
     "1" => $row['text'],

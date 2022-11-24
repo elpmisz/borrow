@@ -5,6 +5,8 @@ $group = "service";
 
 include_once(__DIR__ . "/../../includes/header.php");
 include_once(__DIR__ . "/../../includes/sidebar.php");
+
+print_r($user);
 ?>
 
 <main id="main" class="main">
@@ -33,11 +35,14 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
             </div>
           </div>
 
+          <?php
+          $count = $Borrows->auth_request($user['user_level'], $user['zone_id']);
+          if ($count > 0 && in_array($user['user_level'], [2, 9])) :
+          ?>
           <div class="card shadow my-2">
             <div class="card-header">
-              <h4 class="text-center">รายการขอใช้บริการ</h4>
+              <h4 class="text-center">รายการที่รอดำเนินการ</h4>
             </div>
-
             <div class="card-body">
               <div class="row my-3">
                 <div class="col-xl-12">
@@ -61,11 +66,12 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
             </div>
           </div>
 
+          <?php endif; ?>
+
           <div class="card shadow my-2">
             <div class="card-header">
               <h4 class="text-center">รายการขอใช้บริการ</h4>
             </div>
-
             <div class="card-body">
               <div class="row my-3">
                 <div class="col-xl-12">

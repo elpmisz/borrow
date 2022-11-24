@@ -96,6 +96,9 @@ $Router->map("POST", "/borrow/dataapprove", function () {
 $Router->map("GET", "/borrow/view/[**:params]", function ($params) {
   require(__DIR__ . "/views/borrow/view.php");
 });
+$Router->map("GET", "/borrow/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/views/borrow/approve.php");
+});
 $Router->map("POST", "/borrow/[**:params]", function ($params) {
   require(__DIR__ . "/views/borrow/action.php");
 });

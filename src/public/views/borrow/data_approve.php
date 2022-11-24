@@ -1,4 +1,7 @@
 <?php
+
+use app\classes\User;
+
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -7,6 +10,9 @@ require_once(__DIR__ . "/../../includes/connection.php");
 require_once(__DIR__ . "/../../vendor/autoload.php");
 
 $user_id = (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "");
+
+$Users = new User();
+$user = $Users->user_id_fetch([$user_id]);
 
 $stmt = $dbcon->prepare("SELECT COUNT(*) FROM request WHERE status = 1");
 $stmt->execute();
@@ -35,16 +41,26 @@ LEFT JOIN request_item C
 ON A.id = C.request_id
 LEFT JOIN item D
 ON C.item_id = D.id
+LEFT JOIN user_login E
+ON A.user_id = E.user_id
+LEFT JOIN province F 
+ON B.province_code = F.code
 WHERE A.status = 1 ";
+
+if ($user['user_level'] === 9) {
+  $sql .= " AND E.level = 2 ";
+} else {
+  $sql .= " AND E.level = 1 AND F.zone_id = {$user['zone_id']} ";
+}
 
 if ($keyword) {
   $sql .= " AND (A.text LIKE '%{$keyword}%' OR D.name LIKE '%{$keyword}%') ";
 }
 
 if ($order) {
-  $sql .= "ORDER BY {$column[$order_column]} {$order_dir} ";
+  $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
 } else {
-  $sql .= "ORDER BY A.id DESC ";
+  $sql .= " ORDER BY A.id DESC ";
 }
 
 $query = "";
@@ -61,16 +77,18 @@ $result = $stmt->fetchAll();
 
 $data = [];
 foreach ($result as $row) {
-  $status = "test";
-  $data[] = [
-    "0" => $status,
-    "1" => $row['user_name'],
-    "2" => $row['text'],
-    "3" => $row['type_name'],
-    "4" => str_replace(",", "<br>", $row['item']),
-    "5" => str_replace("-", ",<br>", $row['date']),
-    "6" => str_replace("-", ",<br>", $row['created']),
-  ];
+  if (!empty($row['request_id'])) {
+    $status = "<a href='/borrow/approve/{$row['request_id']}'><span class='badge text-bg-primary fw-lighter'>รอดำเนินการ</span></a>";
+    $data[] = [
+      "0" => $status,
+      "1" => $row['user_name'],
+      "2" => $row['text'],
+      "3" => $row['type_name'],
+      "4" => str_replace(",", "<br>", $row['item']),
+      "5" => str_replace("-", ",<br>", $row['date']),
+      "6" => str_replace("-", ",<br>", $row['created']),
+    ];
+  }
 }
 
 $output = [

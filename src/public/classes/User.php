@@ -70,7 +70,7 @@ class User
   public function user_id_fetch($data)
   {
     $sql = "SELECT A.id user_id,A.name user_name,A.email user_email,A.contact user_contact,A.status,
-    B.name login_name,B.level user_level,A.province_code,C.name province_name,
+    B.name login_name,B.level user_level,A.province_code,C.name province_name,C.zone_id,
     CASE 
       WHEN B.level = 1 THEN 'ผู้ใช้ระดับจังหวัด'
       WHEN B.level = 2 THEN 'ผู้ใช้ระดับเขต'

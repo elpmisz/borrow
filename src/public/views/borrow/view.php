@@ -19,7 +19,7 @@ $items = $Borrows->item_fetch([$request_id]);
     <div class="col-xl-12">
       <div class="card shadow">
         <div class="card-header">
-          <h4 class="text-center">รายละเอียดการ <?php echo $row['type_name'] ?></h4>
+          <h4 class="text-center">รายละเอียด</h4>
         </div>
         <div class="card-body">
           <form action="/borrow/update" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
