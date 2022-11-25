@@ -98,7 +98,7 @@ class Borrow
 
   public function item_fetch($data)
   {
-    $sql = "SELECT A.id,C.name item_name,C.unit item_unit,A.amount,A.confirm,A.location,A.text
+    $sql = "SELECT A.id,A.item_id,B.user_id,C.name item_name,C.unit item_unit,A.amount,A.confirm,A.location,A.text
     FROM request_item A
     LEFT JOIN request B 
     ON A.request_id = B.id
@@ -108,6 +108,26 @@ class Borrow
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return  $stmt->fetchAll();
+  }
+
+  public function count_item($data)
+  {
+    $sql = "SELECT SUM(A.amount) total
+    FROM user_item A
+    LEFT JOIN user_detail B 
+    ON A.user_id = B.id
+    LEFT JOIN province C 
+    ON B.province_code = C.code 
+    LEFT JOIN item D
+    ON A.item_id = D.id
+    WHERE A.user_id != ?
+    AND C.zone_id = ?
+    AND A.item_id = ?
+    GROUP BY A.item_id, C.zone_id";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    $row = $stmt->fetch();
+    return ($row['total'] ? $row['total'] : 0);
   }
 
   public function json_location($data)

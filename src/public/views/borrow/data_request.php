@@ -76,15 +76,17 @@ $result = $stmt->fetchAll();
 
 $data = [];
 foreach ($result as $row) {
-  $status = "<a href='/borrow/view/{$row['request_id']}'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
-  $data[] = [
-    "0" => $status,
-    "1" => $row['text'],
-    "2" => $row['type_name'],
-    "3" => str_replace(",", "<br>", $row['item']),
-    "4" => str_replace("-", ",<br>", $row['date']),
-    "5" => str_replace("-", ",<br>", $row['created']),
-  ];
+  if (!empty($row['request_id'])) {
+    $status = "<a href='/borrow/view/{$row['request_id']}'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
+    $data[] = [
+      "0" => $status,
+      "1" => $row['text'],
+      "2" => $row['type_name'],
+      "3" => str_replace(",", "<br>", $row['item']),
+      "4" => str_replace("-", ",<br>", $row['date']),
+      "5" => str_replace("-", ",<br>", $row['created']),
+    ];
+  }
 }
 
 $output = [
