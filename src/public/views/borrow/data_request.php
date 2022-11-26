@@ -29,6 +29,7 @@ $sql = "SELECT A.id request_id,A.text,A.type type_id,IF(A.type = 1,'ยืม','
 GROUP_CONCAT(CONCAT(D.name,' [ ',C.amount,' ',D.unit,' ]')) item,
 CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ', DATE_FORMAT(A.end, '%d/%m/%Y')) date,
 DATE_FORMAT(A.created, '%d/%m/%Y - %H:%i น.') created,
+A.status,
 CASE A.status
   WHEN 1 THEN 'รออนุมัติ'
   WHEN 2 THEN 'รอรับคืน'
@@ -77,7 +78,12 @@ $result = $stmt->fetchAll();
 $data = [];
 foreach ($result as $row) {
   if (!empty($row['request_id'])) {
-    $status = "<a href='/borrow/view/{$row['request_id']}'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
+    if ($row['status'] === 1) {
+      $status = "<a href='/borrow/view/{$row['request_id']}'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
+    } else {
+      $status = "<a href='/borrow/complete/{$row['request_id']}'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
+    }
+
     $data[] = [
       "0" => $status,
       "1" => $row['text'],

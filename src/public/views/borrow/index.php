@@ -19,7 +19,7 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
         <div class="card-body">
 
           <div class="row justify-content-end">
-            <?php if ($user['user_level'] === 9) : ?>
+            <?php if (in_array($user['user_level'], [2, 9])) : ?>
               <div class="col-xl-3 col-md-6 mb-2">
                 <a href="/borrow/manage" class="btn btn-primary btn-sm w-100">
                   <i class="fa fa-file-alt pe-2"></i>จัดการระบบ

@@ -15,7 +15,7 @@ services:
     container_name: borrow-server
     restart: unless-stopped
     ports:
-      - 7000:80
+      - 9000:80
     volumes:
       - ../src:/var/www
       - ./nginx:/etc/nginx/conf.d
@@ -25,7 +25,7 @@ services:
     container_name: borrow-database
     restart: unless-stopped
     ports:
-      - 3307:3306
+      - 3309:3306
     command: ['--sql_mode=']
     environment:
       MARIADB_ROOT_PASSWORD: P@ssw0rd#db
@@ -35,7 +35,7 @@ services:
     container_name: borrow-phpmyadmin
     restart: unless-stopped
     ports:
-      - 7001:80
+      - 9001:80
     environment:
       PMA_HOST: database
   

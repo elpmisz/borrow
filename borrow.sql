@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Nov 22, 2022 at 02:20 PM
+-- Generation Time: Nov 26, 2022 at 12:40 PM
 -- Server version: 10.9.3-MariaDB-1:10.9.3+maria~ubu2204
 -- PHP Version: 8.0.24
 
@@ -615,6 +615,9 @@ CREATE TABLE `request` (
   `start` date NOT NULL,
   `end` date NOT NULL,
   `text` text NOT NULL,
+  `approver` int(11) DEFAULT NULL,
+  `approve_text` text NOT NULL,
+  `approve_datetime` datetime DEFAULT NULL,
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
@@ -624,8 +627,8 @@ CREATE TABLE `request` (
 -- Dumping data for table `request`
 --
 
-INSERT INTO `request` (`id`, `type`, `user_id`, `start`, `end`, `text`, `status`, `updated`, `created`) VALUES
-(1, 1, 37, '2022-11-01', '2022-11-30', 'ทดสอบระบบ', 1, NULL, '2022-11-22 13:00:42');
+INSERT INTO `request` (`id`, `type`, `user_id`, `start`, `end`, `text`, `approver`, `approve_text`, `approve_datetime`, `status`, `updated`, `created`) VALUES
+(1, 1, 37, '2022-11-01', '2022-11-30', 'ทดสอบระบบ', 6, 'ทดสอบ อนุมัติ', '2022-11-26 11:42:42', 3, '2022-11-26 11:42:11', '2022-11-22 13:00:42');
 
 -- --------------------------------------------------------
 
@@ -650,9 +653,9 @@ CREATE TABLE `request_item` (
 --
 
 INSERT INTO `request_item` (`id`, `request_id`, `item_id`, `amount`, `confirm`, `location`, `text`, `remark`, `created`) VALUES
-(1, 1, 214, 2, 2, '13.834473772846527, 100.63082344588064', '', '', '2022-11-22 13:00:42'),
-(2, 1, 215, 2, 2, '13.834473772846527, 100.63082344588064', '', '', '2022-11-22 13:00:42'),
-(3, 1, 216, 2, 2, '13.834473772846527, 100.63082344588064', '', '', '2022-11-22 13:00:42');
+(1, 1, 214, 2, 2, '13.72901753766495, 100.55879648272278', '', 'aaa', '2022-11-22 13:00:42'),
+(2, 1, 215, 2, 2, '13.731246036917616, 100.540960220102', '', 'bbb', '2022-11-22 13:00:42'),
+(3, 1, 216, 2, 2, '13.723232299960916, 100.55929145285572', '', 'ccc', '2022-11-22 13:00:42');
 
 -- --------------------------------------------------------
 

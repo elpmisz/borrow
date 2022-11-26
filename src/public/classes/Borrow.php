@@ -54,6 +54,19 @@ class Borrow
     return  $stmt;
   }
 
+  public function request_approve($data)
+  {
+    $sql = "UPDATE request SET 
+    approver = ?,
+    approve_text = ?,
+    approve_datetime = NOW(),
+    status = ?
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return  $stmt;
+  }
+
   public function item_insert($data)
   {
     $sql = "INSERT INTO request_item(request_id,item_id,amount,confirm,location,text) VALUES(?,?,?,?,?,?)";
@@ -75,6 +88,17 @@ class Borrow
     return  $stmt;
   }
 
+  public function item_approve($data)
+  {
+    $sql = "UPDATE request_item SET 
+    confirm = ?,
+    remark = ?
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return  $stmt;
+  }
+
   public function item_count($data)
   {
     $sql = "SELECT COUNT(*) FROM request_item WHERE request_id = ? AND item_id = ?";
@@ -86,10 +110,20 @@ class Borrow
   public function request_fetch($data)
   {
     $sql = "SELECT A.id request_id,B.name user_name,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,A.text,
-    CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ',DATE_FORMAT(A.end, '%d/%m/%Y')) date
+    CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ',DATE_FORMAT(A.end, '%d/%m/%Y')) date,
+    C.name approver_name,DATE_FORMAT(A.approve_datetime, '%d/%m/%Y, %H:%i น.') approve_datetime,A.approve_text,
+    CASE A.status
+      WHEN 1 THEN 'รออนุมัติ'
+      WHEN 2 THEN 'รอรับคืน'
+      WHEN 3 THEN 'ดำเนินการเรียบร้อยแล้ว'
+      WHEN 4 THEN 'ยกเลิก'
+      ELSE NULL
+    END status_name
     FROM request A
     LEFT JOIN user_detail B 
     ON A.user_id = B.id
+    LEFT JOIN user_detail C
+    ON A.approver = C.id
     WHERE A.id = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -98,7 +132,7 @@ class Borrow
 
   public function item_fetch($data)
   {
-    $sql = "SELECT A.id,A.item_id,B.user_id,C.name item_name,C.unit item_unit,A.amount,A.confirm,A.location,A.text
+    $sql = "SELECT A.id,A.item_id,B.user_id,C.name item_name,C.unit item_unit,A.amount,A.confirm,A.location,A.text,A.remark
     FROM request_item A
     LEFT JOIN request B 
     ON A.request_id = B.id
@@ -124,6 +158,29 @@ class Borrow
     AND C.zone_id = ?
     AND A.item_id = ?
     GROUP BY A.item_id, C.zone_id";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    $row = $stmt->fetch();
+    return ($row['total'] ? $row['total'] : 0);
+  }
+
+  public function borrow_item($data)
+  {
+    $sql = "SELECT SUM(confirm) total
+    FROM request_item A 
+    LEFT JOIN request B
+    ON A.request_id = B.id
+    LEFT JOIN item C
+    ON A.item_id = C.id
+    LEFT JOIN user_detail D
+    ON B.user_id = D.id
+    LEFT JOIN province E
+    ON D.province_code = E.code
+    WHERE B.status = 3
+    AND B.type = 1
+    AND E.zone_id = ?
+    AND A.item_id = ?
+    GROUP BY A.item_id, E.zone_id";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     $row = $stmt->fetch();

@@ -22,7 +22,7 @@ $items = $Borrows->item_fetch([$request_id]);
           <h4 class="text-center">รายละเอียด</h4>
         </div>
         <div class="card-body">
-          <form action="/borrow/approve" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
+          <form action="/borrow/complete" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
             <div class="row mb-2" style="display: none;">
               <label class="col-xl-4 col-md-4 col-form-label text-xl-end">รายการ</label>
               <div class="col-xl-2 col-md-8">
@@ -49,8 +49,7 @@ $items = $Borrows->item_fetch([$request_id]);
             </div>
 
             <div class="row mb-2">
-              <label class="col-xl-4 col-md-4 col-form-label text-xl-end date_text">วันที่
-                <?php echo $row['type_name'] ?></label>
+              <label class="col-xl-4 col-md-4 col-form-label text-xl-end date_text">วันที่ <?php echo $row['type_name'] ?></label>
               <div class="col-xl-4 col-md-4 ">
                 <input type="text" class="form-control form-control-sm date" value="<?php echo $row['date'] ?>" readonly>
               </div>
@@ -77,7 +76,6 @@ $items = $Borrows->item_fetch([$request_id]);
                         <tr>
                           <th width="5%">#</th>
                           <th width="30%">อุปกรณ์</th>
-                          <th width="10%">จำนวน (ที่มี)</th>
                           <th width="10%">จำนวน (ขอยืม)</th>
                           <th width="10%">จำนวน (ให้ยืม)</th>
                           <th width="5%">หน่วยนับ</th>
@@ -89,28 +87,15 @@ $items = $Borrows->item_fetch([$request_id]);
                         <?php
                         foreach ($items as $key => $item) :
                           $key++;
-                          $stock = $Borrows->count_item([$item['user_id'], $user['zone_id'], $item['item_id']]);
-                          $borrow = $Borrows->borrow_item([$user['zone_id'], $item['item_id']]);
-                          $total = $stock - $borrow;
                         ?>
                           <tr>
                             <td class="text-center"><?php echo $key ?></td>
                             <td><?php echo $item['item_name'] . " - " . $item['item_id'] ?></td>
-                            <td class="text-center">
-                              <?php echo $total ?>
-                            </td>
-                            <td class="text-center">
-                              <?php echo $item['amount'] ?>
-                            </td>
-                            <td class="text-center">
-                              <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
-                              <input type="number" class="form-control form-control-sm text-center amount" name="item__confirm[]" value="<?php echo $item['confirm'] ?>" min="1" max="<?php echo $stock ?>">
-                            </td>
+                            <td class="text-center"><?php echo $item['amount'] ?></td>
+                            <td class="text-center"><?php echo $item['confirm'] ?></td>
                             <td class="text-center"><?php echo $item['item_unit'] ?></td>
                             <td><?php echo $item['text'] ?></td>
-                            <td>
-                              <input type="text" class="form-control form-control-sm" name="item__remark[]">
-                            </td>
+                            <td><?php echo $item['remark'] ?></td>
                           </tr>
                         <?php endforeach; ?>
                       </tbody>
@@ -121,32 +106,20 @@ $items = $Borrows->item_fetch([$request_id]);
             <?php endif; ?>
 
             <div class="row mb-2">
-              <label class="col-xl-4 col-md-4 col-form-label text-xl-end">สถานะ</label>
-              <div class="col-xl-8 col-md-8">
-                <div class="form-check form-check-inline pt-2">
-                  <input class="form-check-input" type="radio" name="status" id="active" value="3">
-                  <label class="form-check-label text-success" for="active">ผ่านการอนุมัติ</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="status" id="inactive" value="4">
-                  <label class="form-check-label text-danger" for="inactive">ไม่ผ่านการอนุมัติ</label>
-                </div>
+              <label class="col-xl-4 col-md-4 col-form-label text-xl-end">ผู้ดำเนินการ</label>
+              <div class="col-xl-6 col-md-8 ">
+                <input type="text" class="form-control form-control-sm" value="<?php echo $row['approver_name'] . " - " . $row['approve_datetime'] ?>" readonly>
               </div>
             </div>
 
             <div class="row mb-2 div_text">
-              <label class="col-xl-4 col-md-4 col-form-label text-xl-end text"></label>
+              <label class="col-xl-4 col-md-4 col-form-label text-xl-end">รายละเอียดเพิ่มเติม</label>
               <div class="col-xl-6 col-md-8">
-                <textarea class="form-control form-control-sm" name="text" rows="3" required></textarea>
+                <textarea class="form-control form-control-sm" rows="3" readonly><?php echo $row['approve_text'] ?></textarea>
               </div>
             </div>
 
             <div class="row justify-content-center mb-2">
-              <div class="col-xl-3 col-md-6">
-                <button type="submit" class="btn btn-success btn-sm w-100">
-                  <i class="fas fa-check pe-2"></i>ยืนยัน
-                </button>
-              </div>
               <div class="col-xl-3 col-md-6">
                 <a href="/borrow" class="btn btn-danger btn-sm w-100">
                   <i class="fa fa-arrow-left pe-2"></i>กลับหน้าหลัก
@@ -165,19 +138,6 @@ include_once(__DIR__ . "/../../includes/footer.php");
 ?>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaCQJfnRNiel1cPN93BlAzFP3uQset6hs&callback=initMap" async defer></script>
 <script>
-  $(".div_text").hide();
-  $(document).on("click", "input[name='status']", function() {
-    let status = parseInt($(this).val());
-    $(".div_text").show();
-    $("textarea[name='text']").val("");
-    if (status === 3) {
-      $(".text").text("รายละเอียดเพิ่มเติม");
-    } else {
-      $(".text").text("เหตุผล");
-    }
-  });
-
-
   function initMap() {
 
     <?php

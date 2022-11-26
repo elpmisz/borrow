@@ -97,8 +97,23 @@ endif;
 
 if ($action === "approve") :
   try {
-    echo "<pre>";
-    print_r($_POST);
+    $request_id = (isset($_POST['id']) ? $Validation->input($_POST['id']) : "");
+    $status = (isset($_POST['status']) ? $Validation->input($_POST['status']) : "");
+    $text = (isset($_POST['text']) ? $Validation->input($_POST['text']) : "");
+
+    $Borrow->request_approve([$user_id, $text, $status, $request_id]);
+
+    if (!empty($_POST['item__id'])) :
+      foreach (array_filter($_POST['item__id']) as $key => $row) :
+        $item__id = (isset($_POST['item__id'][$key]) ? $_POST['item__id'][$key] : "");
+        $item__confirm = (isset($_POST['item__confirm'][$key]) ? $_POST['item__confirm'][$key] : "");
+        $item__remark = (isset($_POST['item__remark'][$key]) ? $_POST['item__remark'][$key] : "");
+
+        $Borrow->item_approve([$item__confirm, $item__remark, $item__id]);
+      endforeach;
+    endif;
+
+    $Validation->alert("success", "ดำเนินการเรียบร้อย", "/borrow");
   } catch (PDOException $e) {
     die($e->getMessage());
   }
