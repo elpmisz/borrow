@@ -22,13 +22,25 @@ $Validation = new Validation();
 
 if ($action === "add") :
   try {
-    $type = (isset($_POST['type']) ? $Validation->input($_POST['type']) : "");
-    $date = (isset($_POST['date']) ? $Validation->input($_POST['date']) : "");
-    $conv = (!empty($date) ? explode("-", $date) : "");
-    $start = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($conv[0])))) : "");
-    $end = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($conv[1])))) : "");
+
+    $type = (isset($_POST['type']) ? intval($Validation->input($_POST['type'])) : "");
+    $date = ($type === 1 ? $Validation->input($_POST['date_borrow']) : $Validation->input($_POST['date_return']));
+    $conv = ($type === 1 ? explode("-", $date) : "");
+    $start = ($type === 1 ? date("Y-m-d", strtotime(str_replace("/", "-", trim($conv[0]))))
+      : date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))));
+    $end = ($type === 1 ? date("Y-m-d", strtotime(str_replace("/", "-", trim($conv[1]))))
+      : date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))));
     $text = (isset($_POST['text']) ? $Validation->input($_POST['text']) : "");
-    $status = (intval($type) === 1 ? 1 : 2);
+    $status = ($type === 1 ? 1 : 2);
+
+    echo "<pre>";
+    print_r($_POST);
+
+    echo $type . "<br>";
+    echo $start  . "<br>";
+    echo $end  . "<br>";
+    echo $status  . "<br>";
+    die();
 
     $Borrow->request_insert([$type, $user_id, $start, $end, $text, $status]);
     $request_id = $Borrow->last_insert_id();

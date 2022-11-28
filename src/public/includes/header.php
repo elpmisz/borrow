@@ -9,6 +9,7 @@ use app\classes\User;
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+date_default_timezone_set("Asia/Bangkok");
 
 require_once(__DIR__ . "/../vendor/autoload.php");
 $user_id = (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "");

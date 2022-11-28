@@ -111,7 +111,7 @@ class Borrow
   {
     $sql = "SELECT A.id request_id,B.name user_name,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,A.text,
     CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ',DATE_FORMAT(A.end, '%d/%m/%Y')) date,
-    C.name approver_name,DATE_FORMAT(A.approve_datetime, '%d/%m/%Y, %H:%i น.') approve_datetime,A.approve_text,
+    C.name approver_name,DATE_FORMAT(A.approve_datetime, '[ %d/%m/%Y, %H:%i น. ]') approve_datetime,A.approve_text,
     CASE A.status
       WHEN 1 THEN 'รออนุมัติ'
       WHEN 2 THEN 'รอรับคืน'
@@ -139,6 +139,22 @@ class Borrow
     LEFT JOIN item C
     ON A.item_id = C.id
     WHERE A.request_id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return  $stmt->fetchAll();
+  }
+
+  public function item_borrow_fetch($data)
+  {
+    $sql = "SELECT A.item_id,B.user_id,C.name item_name,C.unit item_unit,SUM(A.confirm) total
+    FROM request_item A
+    LEFT JOIN request B 
+    ON A.request_id = B.id
+    LEFT JOIN item C
+    ON A.item_id = C.id
+    WHERE B.type = 1
+    AND B.user_id = ?
+    GROUP BY item_id";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return  $stmt->fetchAll();
@@ -185,6 +201,17 @@ class Borrow
     $stmt->execute($data);
     $row = $stmt->fetch();
     return ($row['total'] ? $row['total'] : 0);
+  }
+
+  public function count_location($data)
+  {
+    $sql = "SELECT COUNT(location)
+    FROM request_item
+    WHERE request_id = ?
+    AND location != '' ";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchColumn();
   }
 
   public function json_location($data)

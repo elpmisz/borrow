@@ -57,6 +57,8 @@ if ($keyword) {
   $sql .= " AND (A.text LIKE '%{$keyword}%' OR D.name LIKE '%{$keyword}%') ";
 }
 
+$sql .= " GROUP BY A.id ";
+
 if ($order) {
   $sql .= "ORDER BY {$column[$order_column]} {$order_dir} ";
 } else {

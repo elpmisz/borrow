@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Nov 26, 2022 at 12:40 PM
+-- Generation Time: Nov 28, 2022 at 01:14 PM
 -- Server version: 10.9.3-MariaDB-1:10.9.3+maria~ubu2204
 -- PHP Version: 8.0.24
 
@@ -628,7 +628,8 @@ CREATE TABLE `request` (
 --
 
 INSERT INTO `request` (`id`, `type`, `user_id`, `start`, `end`, `text`, `approver`, `approve_text`, `approve_datetime`, `status`, `updated`, `created`) VALUES
-(1, 1, 37, '2022-11-01', '2022-11-30', 'ทดสอบระบบ', 6, 'ทดสอบ อนุมัติ', '2022-11-26 11:42:42', 3, '2022-11-26 11:42:11', '2022-11-22 13:00:42');
+(1, 1, 37, '2022-11-01', '2022-11-30', 'ทดสอบระบบ', 6, 'ทดสอบ อนุมัติ', '2022-11-26 11:42:42', 3, '2022-11-26 11:42:11', '2022-11-22 13:00:42'),
+(2, 1, 37, '2022-12-01', '2022-12-31', 'ทดสอบระบบบ', 6, 'ทดสอบบบบ ยืมเพิ่มเติม', '2022-11-28 19:37:51', 3, NULL, '2022-11-28 19:17:51');
 
 -- --------------------------------------------------------
 
@@ -655,7 +656,10 @@ CREATE TABLE `request_item` (
 INSERT INTO `request_item` (`id`, `request_id`, `item_id`, `amount`, `confirm`, `location`, `text`, `remark`, `created`) VALUES
 (1, 1, 214, 2, 2, '13.72901753766495, 100.55879648272278', '', 'aaa', '2022-11-22 13:00:42'),
 (2, 1, 215, 2, 2, '13.731246036917616, 100.540960220102', '', 'bbb', '2022-11-22 13:00:42'),
-(3, 1, 216, 2, 2, '13.723232299960916, 100.55929145285572', '', 'ccc', '2022-11-22 13:00:42');
+(3, 1, 216, 2, 2, '13.723232299960916, 100.55929145285572', '', 'ccc', '2022-11-22 13:00:42'),
+(4, 2, 214, 3, 3, '', '', '', '2022-11-28 12:17:45'),
+(5, 2, 215, 3, 3, '', '', '', '2022-11-28 12:17:45'),
+(6, 2, 216, 3, 3, '', '', '', '2022-11-28 12:17:45');
 
 -- --------------------------------------------------------
 
@@ -1032,13 +1036,13 @@ ALTER TABLE `province`
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `request_item`
 --
 ALTER TABLE `request_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user_detail`

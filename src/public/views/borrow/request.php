@@ -38,10 +38,19 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
               </div>
             </div>
 
-            <div class="row mb-2">
-              <label class="col-xl-4 col-md-4 col-form-label text-xl-end date_text">วันที่ ยืม</label>
+            <div class="row mb-2 div_borrow">
+              <label class="col-xl-4 col-md-4 col-form-label text-xl-end">วันที่ ยืม</label>
               <div class="col-xl-4 col-md-4 ">
-                <input type="text" class="form-control form-control-sm date" name="date" required>
+                <input type="text" class="form-control form-control-sm date_borrow" name="date_borrow">
+                <div class="invalid-feedback">
+                  กรุณากรอกช่องนี้.
+                </div>
+              </div>
+            </div>
+            <div class="row mb-2 div_return">
+              <label class="col-xl-4 col-md-4 col-form-label text-xl-end">วันที่ คืน</label>
+              <div class="col-xl-4 col-md-4 ">
+                <input type="text" class="form-control form-control-sm date_return" name="date_return">
                 <div class="invalid-feedback">
                   กรุณากรอกช่องนี้.
                 </div>
@@ -85,7 +94,7 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
                         </td>
                         <td>
                           <select class="form-select form-select-sm item" name="item_id[]"
-                            data-placeholder="-- เลือก --" required></select>
+                            data-placeholder="-- เลือก --"></select>
                           <div class="invalid-feedback">
                             กรุณาเลือกช่องนี้.
                           </div>
@@ -104,6 +113,44 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
                           <input type="text" class="form-control form-control-sm" name="item_text[]">
                         </td>
                       </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-2 div_return">
+              <div class="col-sm-12">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-sm w-100">
+                    <thead>
+                      <tr>
+                        <th width="10%">#</th>
+                        <th width="30%">อุปกรณ์</th>
+                        <th width="10%">จำนวน (ยืม)</th>
+                        <th width="10%">จำนวน (คืน)</th>
+                        <th width="10%">หน่วยนับ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                      $items = $Borrows->item_borrow_fetch([$user_id]);
+                      foreach ($items as $key => $item) :
+                        $key++;
+                      ?>
+                      <tr>
+                        <td class="text-center"><?php echo $key ?></td>
+                        <td><?php echo $item['item_name'] ?></td>
+                        <td class="text-center"><?php echo $item['total'] ?></td>
+                        <td>
+                          <input type="hidden" class="form-control form-control-sm text-center" name="borrow_id[]"
+                            value="<?php echo $item['item_id'] ?>">
+                          <input type="number" class="form-control form-control-sm text-center" name="borrow_amount[]"
+                            value="<?php echo $item['total'] ?>" min="1" max="<?php echo $item['total'] ?>">
+                        </td>
+                        <td class="text-center"><?php echo $item['item_unit'] ?></td>
+                      </tr>
+                      <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>
@@ -209,11 +256,11 @@ $(document).on("click", ".increase", function() {
   });
 });
 
-$(".date").on('keydown paste', function(e) {
+$(".date_borrow, .date_return").on('keydown paste', function(e) {
   e.preventDefault();
 });
 
-$(".date").daterangepicker({
+$(".date_borrow").daterangepicker({
   autoUpdateInput: false,
   showDropdowns: true,
   locale: {
@@ -232,26 +279,49 @@ $(".date").daterangepicker({
   "cancelClass": "btn-danger"
 });
 
-$(".date").on("apply.daterangepicker", function(ev, picker) {
+$(".date_return").daterangepicker({
+  singleDatePicker: true,
+  showDropdowns: true,
+  locale: {
+    "format": "DD/MM/YYYY",
+    "applyLabel": "ยืนยัน",
+    "cancelLabel": "ยกเลิก",
+    "daysOfWeek": [
+      "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+    ],
+    "monthNames": [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ]
+  },
+  "applyButtonClasses": "btn-success",
+  "cancelClass": "btn-danger"
+});
+
+$(".date_borrow").on("apply.daterangepicker", function(ev, picker) {
   $(this).val(picker.startDate.format("DD/MM/YYYY") + " - " + picker.endDate.format("DD/MM/YYYY"));
 });
 
-$(".date").on("cancel.daterangepicker", function(ev, picker) {
+$(".date_borrow").on("cancel.daterangepicker", function(ev, picker) {
   $(this).val("");
 });
 
-$(".div_borrow").hide();
+$(".div_borrow, .div_return").hide();
 $(document).on("click", "input[name='type']", function() {
   let type = parseInt($(this).val());
   $(".date").val("");
   if (type === 1) {
-    $(".date_text").text("วันที่ ยืม");
     $(".text").text("จุดประสงค์การยืม");
+    $(".item, .date_borrow").prop("required", true);
+    $(".date_return").prop("required", false);
     $(".div_borrow").show();
+    $(".div_return").hide();
   } else {
-    $(".date_text").text("วันที่ คืน");
     $(".text").text("รายละเอียดเพิ่มเติม");
+    $(".item, .date_borrow").prop("required", false);
+    $(".date_return").prop("required", true);
     $(".div_borrow").hide();
+    $(".div_return").show();
   }
 });
 </script>
