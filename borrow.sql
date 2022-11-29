@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Nov 28, 2022 at 01:14 PM
--- Server version: 10.9.3-MariaDB-1:10.9.3+maria~ubu2204
--- PHP Version: 8.0.24
+-- Generation Time: Nov 29, 2022 at 09:50 AM
+-- Server version: 10.10.2-MariaDB-1:10.10.2+maria~ubu2204
+-- PHP Version: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,7 +36,7 @@ CREATE TABLE `item` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `item`
@@ -517,7 +517,7 @@ CREATE TABLE `province` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `province`
@@ -621,15 +621,18 @@ CREATE TABLE `request` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `request`
 --
 
 INSERT INTO `request` (`id`, `type`, `user_id`, `start`, `end`, `text`, `approver`, `approve_text`, `approve_datetime`, `status`, `updated`, `created`) VALUES
-(1, 1, 37, '2022-11-01', '2022-11-30', 'ทดสอบระบบ', 6, 'ทดสอบ อนุมัติ', '2022-11-26 11:42:42', 3, '2022-11-26 11:42:11', '2022-11-22 13:00:42'),
-(2, 1, 37, '2022-12-01', '2022-12-31', 'ทดสอบระบบบ', 6, 'ทดสอบบบบ ยืมเพิ่มเติม', '2022-11-28 19:37:51', 3, NULL, '2022-11-28 19:17:51');
+(1, 1, 37, '2022-11-01', '2022-11-30', 'ทดสอบระบบ', 6, 'ทดสอบ อนุมัติ', '2022-11-26 11:42:42', 3, '2022-11-29 08:07:00', '2022-11-22 13:00:42'),
+(2, 1, 37, '2022-12-01', '2022-12-01', 'ทดสอบระบบบ', 6, 'ทดสอบบบบ ยืมเพิ่มเติม', '2022-11-28 19:37:51', 3, '2022-11-29 03:50:43', '2022-11-28 19:17:51'),
+(3, 2, 37, '2022-11-29', '2022-11-29', 'ทดสอบระบบ คืนอุปกรณ์ update', 6, 'ทดสอบอนุมัติ คืนอุปกรณ์', '2022-11-29 06:58:28', 3, '2022-11-29 04:15:33', '2022-11-29 02:30:47'),
+(4, 2, 37, '2022-11-30', '2022-11-30', 'ทดลองคืนนนนนนน', 6, 'ทดสอบระบบบบบบ', '2022-11-29 08:28:27', 3, '2022-11-29 08:27:40', '2022-11-29 08:26:14'),
+(5, 1, 37, '2022-12-01', '2022-12-31', 'ทดสอบบบบบบ ยืมมมมมมม', NULL, '', NULL, 1, '2022-11-29 09:29:08', '2022-11-29 08:35:13');
 
 -- --------------------------------------------------------
 
@@ -647,19 +650,28 @@ CREATE TABLE `request_item` (
   `text` text NOT NULL,
   `remark` text NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `request_item`
 --
 
 INSERT INTO `request_item` (`id`, `request_id`, `item_id`, `amount`, `confirm`, `location`, `text`, `remark`, `created`) VALUES
-(1, 1, 214, 2, 2, '13.72901753766495, 100.55879648272278', '', 'aaa', '2022-11-22 13:00:42'),
-(2, 1, 215, 2, 2, '13.731246036917616, 100.540960220102', '', 'bbb', '2022-11-22 13:00:42'),
-(3, 1, 216, 2, 2, '13.723232299960916, 100.55929145285572', '', 'ccc', '2022-11-22 13:00:42'),
-(4, 2, 214, 3, 3, '', '', '', '2022-11-28 12:17:45'),
-(5, 2, 215, 3, 3, '', '', '', '2022-11-28 12:17:45'),
-(6, 2, 216, 3, 3, '', '', '', '2022-11-28 12:17:45');
+(1, 1, 214, 2, 2, '13.729553808480842, 100.55840042030485', '', 'aaa', '2022-11-22 13:00:42'),
+(2, 1, 215, 2, 2, '13.731221367186608, 100.54179218287362', '', 'bbb', '2022-11-22 13:00:42'),
+(3, 1, 216, 2, 2, '13.723175287021773, 100.55998828796623', '', 'ccc', '2022-11-22 13:00:42'),
+(4, 2, 214, 3, 3, '13.74611419625852, 100.5649197053815', '', '', '2022-11-28 12:17:45'),
+(5, 2, 215, 3, 3, '13.743940853609203, 100.56257402714951', '', '', '2022-11-28 12:17:45'),
+(6, 2, 216, 3, 3, '13.748638052736668, 100.56311533751072', '', '', '2022-11-28 12:17:45'),
+(7, 3, 214, 2, 2, '', '', '', '2022-11-29 02:30:47'),
+(8, 3, 215, 2, 2, '', '', '', '2022-11-29 02:30:47'),
+(9, 3, 216, 2, 2, '', '', '', '2022-11-29 02:30:47'),
+(10, 4, 214, 2, 2, '', '', '', '2022-11-29 08:26:14'),
+(11, 4, 215, 2, 2, '', '', '', '2022-11-29 08:26:14'),
+(12, 4, 216, 2, 2, '', '', '', '2022-11-29 08:26:14'),
+(13, 5, 214, 1, 1, '13.722299790148321, 100.5541518014271', '', '', '2022-11-29 08:35:13'),
+(14, 5, 215, 1, 1, '13.724467681197465, 100.54947402912735', '', '', '2022-11-29 08:35:13'),
+(15, 5, 216, 1, 1, '13.725801758040005, 100.54543998696057', '', '', '2022-11-29 08:35:13');
 
 -- --------------------------------------------------------
 
@@ -675,7 +687,7 @@ CREATE TABLE `setting` (
   `default_password` varchar(50) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `updated` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `setting`
@@ -699,7 +711,7 @@ CREATE TABLE `user_detail` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_detail`
@@ -818,7 +830,7 @@ CREATE TABLE `user_item` (
   `remark` varchar(200) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_item`
@@ -855,7 +867,7 @@ CREATE TABLE `user_login` (
   `level` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_login`
@@ -1036,13 +1048,13 @@ ALTER TABLE `province`
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `request_item`
 --
 ALTER TABLE `request_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `user_detail`

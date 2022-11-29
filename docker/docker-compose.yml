@@ -4,6 +4,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    environment:
+      - TZ=Asia/Bangkok
     container_name: borrow-app
     restart: unless-stopped
     working_dir: /var/www/

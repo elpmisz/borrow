@@ -10,7 +10,9 @@ $param = (isset($params) ? explode("/", $params) : "");
 $request_id = (!empty($param[0]) ? $param[0] : "");
 
 $row = $Borrows->request_fetch([$request_id]);
-$items = $Borrows->item_fetch([$request_id]);
+$items = ($row['type_id'] === 1
+  ? $Borrows->item_fetch([$user['zone_id'], $request_id], $row['user_id'])
+  : $Borrows->item_return_fetch([$row['user_id']], $request_id));
 ?>
 
 <main id="main" class="main">
@@ -48,18 +50,32 @@ $items = $Borrows->item_fetch([$request_id]);
               </div>
             </div>
 
-            <div class="row mb-2">
-              <label class="col-xl-4 col-md-4 col-form-label text-xl-end date_text">วันที่
-                <?php echo $row['type_name'] ?></label>
-              <div class="col-xl-4 col-md-4 ">
-                <input type="text" class="form-control form-control-sm date" name="date" value="<?php echo $row['date'] ?>" required>
-                <div class="invalid-feedback">
-                  กรุณากรอกช่องนี้.
+            <?php if ($row['type_id'] === 1) : ?>
+              <div class="row mb-2">
+                <label class="col-xl-4 col-md-4 col-form-label text-xl-end">วันที่ ยืม</label>
+                <div class="col-xl-4 col-md-4 ">
+                  <input type="text" class="form-control form-control-sm date_borrow" name="date_borrow" value="<?php echo $row['date_borrow'] ?>">
+                  <div class="invalid-feedback">
+                    กรุณากรอกช่องนี้.
+                  </div>
                 </div>
               </div>
-            </div>
+            <?php endif; ?>
+
+            <?php if ($row['type_id'] === 2) : ?>
+              <div class="row mb-2 div_return">
+                <label class="col-xl-4 col-md-4 col-form-label text-xl-end">วันที่ คืน</label>
+                <div class="col-xl-4 col-md-4 ">
+                  <input type="text" class="form-control form-control-sm date_return" name="date_return" value="<?php echo $row['date_return'] ?>">
+                  <div class="invalid-feedback">
+                    กรุณากรอกช่องนี้.
+                  </div>
+                </div>
+              </div>
+            <?php endif; ?>
+
             <div class="row mb-2">
-              <label class="col-xl-4 col-md-4 col-form-label text-xl-end text"><?php echo ($row['type_id'] === 1 ? "จุดประสงค์การยืม" : "รายละเอียดเพิ่มเติม") ?></label>
+              <label class="col-xl-4 col-md-4 col-form-label text-xl-end text">จุดประสงค์การยืม</label>
               <div class="col-xl-6 col-md-8">
                 <textarea class="form-control form-control-sm" name="text" rows="3" required><?php echo $row['text'] ?></textarea>
                 <div class="invalid-feedback">
@@ -69,14 +85,16 @@ $items = $Borrows->item_fetch([$request_id]);
             </div>
 
             <?php if ($row['type_id'] === 1) : ?>
-              <div class="row mb-2">
+              <div class="row mb-2 div_borrow">
                 <label class="col-xl-4 col-md-4 col-form-label text-xl-end">Google Maps</label>
                 <div class="col-xl-6 col-md-8 pt-2">
                   <a href=" https://www.google.co.th/maps" target="_blank">คลิก</a>
                 </div>
               </div>
+            <?php endif; ?>
 
-              <div class="row mb-2">
+            <?php if ($row['type_id'] === 1) : ?>
+              <div class="row mb-2 div_borrow">
                 <div class="col-sm-12">
                   <div class="table-responsive">
                     <table class="table table-bordered table-sm">
@@ -94,20 +112,19 @@ $items = $Borrows->item_fetch([$request_id]);
                         <?php foreach ($items as $item) : ?>
                           <tr>
                             <td class="text-center">
-                              <a href="javascript:void(0)" class="badge text-bg-danger fw-lighter item_delete" id="<?php echo $item['id'] ?>">ลบ</a>
+                              <a href="javascript:void(0)" class="badge text-bg-danger fw-lighter item_delete" id="<?php echo $item['request_location'] ?>">ลบ</a>
                             </td>
                             <td><?php echo $item['item_name'] ?></td>
                             <td class="text-center">
-                              <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
-                              <input type="number" class="form-control form-control-sm text-center amount" name="item__amount[]" value="<?php echo $item['amount'] ?>" min="1">
-
+                              <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['request_id'] ?>" readonly>
+                              <input type="number" class="form-control form-control-sm text-center amount" name="item__amount[]" value="<?php echo $item['request_amount'] ?>" min="1">
                             </td>
                             <td class="text-center"><?php echo $item['item_unit'] ?></td>
                             <td>
-                              <input type="text" class="form-control form-control-sm" name="item__location[]" value="<?php echo $item['location'] ?>">
+                              <input type="text" class="form-control form-control-sm" name="item__location[]" value="<?php echo $item['request_location'] ?>">
                             </td>
                             <td>
-                              <input type="text" class="form-control form-control-sm" name="item__text[]" value="<?php echo $item['text'] ?>">
+                              <input type="text" class="form-control form-control-sm" name="item__text[]" value="<?php echo $item['request_text'] ?>">
                             </td>
                           </tr>
                         <?php endforeach; ?>
@@ -135,6 +152,43 @@ $items = $Borrows->item_fetch([$request_id]);
                             <input type="text" class="form-control form-control-sm" name="item_text[]">
                           </td>
                         </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            <?php endif; ?>
+
+            <?php if ($row['type_id'] === 2) : ?>
+              <div class="row mb-2 div_return">
+                <div class="col-sm-12">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm w-100">
+                      <thead>
+                        <tr>
+                          <th width="10%">#</th>
+                          <th width="30%">อุปกรณ์</th>
+                          <th width="10%">จำนวน (ยืม)</th>
+                          <th width="10%">จำนวน (คืน)</th>
+                          <th width="10%">หน่วยนับ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                        foreach ($items as $key => $item) :
+                          $key++;
+                        ?>
+                          <tr>
+                            <td class="text-center"><?php echo $key ?></td>
+                            <td><?php echo $item['item_name'] ?></td>
+                            <td class="text-center"><?php echo $item['balance'] ?></td>
+                            <td>
+                              <input type="hidden" class="form-control form-control-sm text-center" name="borrow_id[]" value="<?php echo $item['item_id'] ?>">
+                              <input type="number" class="form-control form-control-sm text-center" name="borrow_amount[]" value="<?php echo $item['item_return'] ?>" <?php echo ($row['type_id'] === 2 ? 'min="1"' : "")  ?> max="<?php echo $item['balance'] ?>">
+                            </td>
+                            <td class="text-center"><?php echo $item['item_unit'] ?></td>
+                          </tr>
+                        <?php endforeach; ?>
                       </tbody>
                     </table>
                   </div>
@@ -241,11 +295,11 @@ include_once(__DIR__ . "/../../includes/footer.php");
     });
   });
 
-  $(".date").on('keydown paste', function(e) {
+  $(".date_borrow, .date_return").on('keydown paste', function(e) {
     e.preventDefault();
   });
 
-  $(".date").daterangepicker({
+  $(".date_borrow").daterangepicker({
     autoUpdateInput: false,
     showDropdowns: true,
     locale: {
@@ -264,13 +318,43 @@ include_once(__DIR__ . "/../../includes/footer.php");
     "cancelClass": "btn-danger"
   });
 
-  $(".date").on("apply.daterangepicker", function(ev, picker) {
+  $(".date_return").daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    locale: {
+      "format": "DD/MM/YYYY",
+      "applyLabel": "ยืนยัน",
+      "cancelLabel": "ยกเลิก",
+      "daysOfWeek": [
+        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+      ],
+      "monthNames": [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ]
+    },
+    "applyButtonClasses": "btn-success",
+    "cancelClass": "btn-danger"
+  });
+
+  $(".date_borrow").on("apply.daterangepicker", function(ev, picker) {
     $(this).val(picker.startDate.format("DD/MM/YYYY") + " - " + picker.endDate.format("DD/MM/YYYY"));
   });
 
-  $(".date").on("cancel.daterangepicker", function(ev, picker) {
+  $(".date_borrow").on("cancel.daterangepicker", function(ev, picker) {
     $(this).val("");
   });
+
+  let type = parseInt($("input[name='type']").val());
+  if (type === 1) {
+    $(".text").text("จุดประสงค์การยืม");
+    $(".date_borrow").prop("required", true);
+    $(".date_return").prop("required", false);
+  } else {
+    $(".text").text("รายละเอียดเพิ่มเติม");
+    $(".date_borrow").prop("required", false);
+    $(".date_return").prop("required", true);
+  }
 
   $(document).on("click", ".item_delete", function(e) {
     let item = $(this).prop("id");

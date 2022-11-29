@@ -32,7 +32,8 @@ $draw = (isset($_POST['draw']) ? $_POST['draw'] : "");
 
 $sql = "SELECT A.id request_id,A.text,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,B.name user_name,
 GROUP_CONCAT(CONCAT(D.name,' [ ',C.amount,' ',D.unit,' ]')) item,
-CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ', DATE_FORMAT(A.end, '%d/%m/%Y')) date,
+CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ', DATE_FORMAT(A.end, '%d/%m/%Y')) date_borrow,
+DATE_FORMAT(A.start, '%d/%m/%Y') date_return,
 DATE_FORMAT(A.created, '%d/%m/%Y - %H:%i น.') created
 FROM request A
 LEFT JOIN user_detail B
@@ -45,7 +46,7 @@ LEFT JOIN user_login E
 ON A.user_id = E.user_id
 LEFT JOIN province F 
 ON B.province_code = F.code
-WHERE A.status = 1 ";
+WHERE A.status IN (1,2) ";
 
 if ($user['user_level'] === 9) {
   $sql .= " AND E.level = 2 ";
@@ -85,7 +86,7 @@ foreach ($result as $row) {
       "2" => $row['text'],
       "3" => $row['type_name'],
       "4" => str_replace(",", "<br>", $row['item']),
-      "5" => str_replace("-", ",<br>", $row['date']),
+      "5" => ($row['type_id'] === 1 ? str_replace("-", ",<br>", $row['date_borrow']) : $row['date_return']),
       "6" => str_replace("-", ",<br>", $row['created']),
     ];
   }

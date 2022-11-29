@@ -22,7 +22,6 @@ $Validation = new Validation();
 
 if ($action === "add") :
   try {
-
     $type = (isset($_POST['type']) ? intval($Validation->input($_POST['type'])) : "");
     $date = ($type === 1 ? $Validation->input($_POST['date_borrow']) : $Validation->input($_POST['date_return']));
     $conv = ($type === 1 ? explode("-", $date) : "");
@@ -33,19 +32,10 @@ if ($action === "add") :
     $text = (isset($_POST['text']) ? $Validation->input($_POST['text']) : "");
     $status = ($type === 1 ? 1 : 2);
 
-    echo "<pre>";
-    print_r($_POST);
-
-    echo $type . "<br>";
-    echo $start  . "<br>";
-    echo $end  . "<br>";
-    echo $status  . "<br>";
-    die();
-
     $Borrow->request_insert([$type, $user_id, $start, $end, $text, $status]);
     $request_id = $Borrow->last_insert_id();
 
-    if (isset($_POST['item_id'])) :
+    if (isset($_POST['item_id']) && $type === 1) :
       foreach (array_filter($_POST['item_id']) as $key => $row) :
         $item_id = (isset($_POST['item_id'][$key]) ? $_POST['item_id'][$key] : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $_POST['item_amount'][$key] : "");
@@ -53,6 +43,17 @@ if ($action === "add") :
         $item_text = (isset($_POST['item_text'][$key]) ? $_POST['item_text'][$key] : "");
 
         $Borrow->item_insert([$request_id, $item_id, $item_amount, $item_amount, $item_location, $item_text]);
+      endforeach;
+    endif;
+
+    if (isset($_POST['borrow_id']) && $type === 2) :
+      foreach (array_filter($_POST['borrow_id']) as $key => $row) :
+        $borrow_id = (isset($_POST['borrow_id'][$key]) ? $_POST['borrow_id'][$key] : "");
+        $borrow_amount = (isset($_POST['borrow_amount'][$key]) ? $_POST['borrow_amount'][$key] : "");
+        $borrow_location = (isset($_POST['borrow_location'][$key]) ? $_POST['borrow_location'][$key] : "");
+        $borrow_text = (isset($_POST['borrow_text'][$key]) ? $_POST['borrow_text'][$key] : "");
+
+        $Borrow->item_insert([$request_id, $borrow_id, $borrow_amount, $borrow_amount, $borrow_location, $borrow_text]);
       endforeach;
     endif;
 
@@ -65,11 +66,13 @@ endif;
 if ($action === "update") :
   try {
     $request_id = (isset($_POST['id']) ? $Validation->input($_POST['id']) : "");
-    $type = (isset($_POST['type']) ? $Validation->input($_POST['type']) : "");
-    $date = (isset($_POST['date']) ? $Validation->input($_POST['date']) : "");
-    $conv = (!empty($date) ? explode("-", $date) : "");
-    $start = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($conv[0])))) : "");
-    $end = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($conv[1])))) : "");
+    $type = (isset($_POST['type']) ? intval($Validation->input($_POST['type'])) : "");
+    $date = ($type === 1 ? $Validation->input($_POST['date_borrow']) : $Validation->input($_POST['date_return']));
+    $conv = ($type === 1 ? explode("-", $date) : "");
+    $start = ($type === 1 ? date("Y-m-d", strtotime(str_replace("/", "-", trim($conv[0]))))
+      : date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))));
+    $end = ($type === 1 ? date("Y-m-d", strtotime(str_replace("/", "-", trim($conv[1]))))
+      : date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))));
     $text = (isset($_POST['text']) ? $Validation->input($_POST['text']) : "");
 
     $Borrow->request_update([$start, $end, $text, $request_id]);
@@ -101,6 +104,16 @@ if ($action === "update") :
       endforeach;
     endif;
 
+    // UPDATE RETURN
+    if (!empty($_POST['borrow_id'])) :
+      foreach (array_filter($_POST['borrow_id']) as $key => $row) :
+        $borrow_id = (isset($_POST['borrow_id'][$key]) ? $_POST['borrow_id'][$key] : "");
+        $borrow_amount = (isset($_POST['borrow_amount'][$key]) ? $_POST['borrow_amount'][$key] : "");
+
+        $Borrow->item_borrow_update([$borrow_amount, $borrow_amount, $request_id, $borrow_id]);
+      endforeach;
+    endif;
+
     $Validation->alert("success", "ปรับปรุงข้อมูลเรียบร้อย", "/borrow/view/{$request_id}");
   } catch (PDOException $e) {
     die($e->getMessage());
@@ -122,6 +135,15 @@ if ($action === "approve") :
         $item__remark = (isset($_POST['item__remark'][$key]) ? $_POST['item__remark'][$key] : "");
 
         $Borrow->item_approve([$item__confirm, $item__remark, $item__id]);
+      endforeach;
+    endif;
+
+    if (!empty($_POST['borrow_id'])) :
+      foreach (array_filter($_POST['borrow_id']) as $key => $row) :
+        $borrow_id = (isset($_POST['borrow_id'][$key]) ? $_POST['borrow_id'][$key] : "");
+        $borrow_amount = (isset($_POST['borrow_amount'][$key]) ? $_POST['borrow_amount'][$key] : "");
+
+        $Borrow->item_borrow_update([$borrow_amount, $borrow_amount, $request_id, $borrow_id]);
       endforeach;
     endif;
 
