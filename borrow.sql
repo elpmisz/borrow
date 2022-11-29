@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Nov 29, 2022 at 09:50 AM
--- Server version: 10.10.2-MariaDB-1:10.10.2+maria~ubu2204
--- PHP Version: 8.0.25
+-- Generation Time: Nov 29, 2022 at 12:57 PM
+-- Server version: 10.9.3-MariaDB-1:10.9.3+maria~ubu2204
+-- PHP Version: 8.0.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,7 +36,7 @@ CREATE TABLE `item` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `item`
@@ -517,7 +517,7 @@ CREATE TABLE `province` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `province`
@@ -621,7 +621,7 @@ CREATE TABLE `request` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `request`
@@ -632,7 +632,7 @@ INSERT INTO `request` (`id`, `type`, `user_id`, `start`, `end`, `text`, `approve
 (2, 1, 37, '2022-12-01', '2022-12-01', 'ทดสอบระบบบ', 6, 'ทดสอบบบบ ยืมเพิ่มเติม', '2022-11-28 19:37:51', 3, '2022-11-29 03:50:43', '2022-11-28 19:17:51'),
 (3, 2, 37, '2022-11-29', '2022-11-29', 'ทดสอบระบบ คืนอุปกรณ์ update', 6, 'ทดสอบอนุมัติ คืนอุปกรณ์', '2022-11-29 06:58:28', 3, '2022-11-29 04:15:33', '2022-11-29 02:30:47'),
 (4, 2, 37, '2022-11-30', '2022-11-30', 'ทดลองคืนนนนนนน', 6, 'ทดสอบระบบบบบบ', '2022-11-29 08:28:27', 3, '2022-11-29 08:27:40', '2022-11-29 08:26:14'),
-(5, 1, 37, '2022-12-01', '2022-12-31', 'ทดสอบบบบบบ ยืมมมมมมม', NULL, '', NULL, 1, '2022-11-29 09:29:08', '2022-11-29 08:35:13');
+(5, 1, 37, '2022-12-01', '2022-12-31', 'ทดสอบบบบบบ ยืมมมมมมม', 6, 'ผ่านนน', '2022-11-29 12:30:54', 3, '2022-11-29 09:29:08', '2022-11-29 08:35:13');
 
 -- --------------------------------------------------------
 
@@ -650,7 +650,7 @@ CREATE TABLE `request_item` (
   `text` text NOT NULL,
   `remark` text NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `request_item`
@@ -687,7 +687,7 @@ CREATE TABLE `setting` (
   `default_password` varchar(50) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `updated` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `setting`
@@ -711,7 +711,7 @@ CREATE TABLE `user_detail` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_detail`
@@ -830,28 +830,79 @@ CREATE TABLE `user_item` (
   `remark` varchar(200) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_item`
 --
 
 INSERT INTO `user_item` (`id`, `user_id`, `text`, `item_id`, `amount`, `remark`, `status`, `created`) VALUES
-(1, 37, '', 214, 6, '', 1, '2022-11-21 12:35:25'),
-(2, 37, '', 215, 3, '', 1, '2022-11-21 12:35:25'),
-(3, 37, '', 216, 16, '', 1, '2022-11-21 12:35:25'),
+(1, 37, '', 214, 29, '', 1, '2022-11-21 12:35:25'),
+(2, 37, '', 215, 33, '', 1, '2022-11-21 12:35:25'),
+(3, 37, '', 216, 36, '', 1, '2022-11-21 12:35:25'),
 (4, 38, '', 214, 14, '', 1, '2022-11-21 12:36:32'),
-(5, 38, '', 215, 2, '', 1, '2022-11-21 12:36:32'),
-(6, 38, '', 216, 6, '', 1, '2022-11-21 12:36:32'),
-(7, 39, '', 214, 7, '', 1, '2022-11-21 12:37:07'),
-(8, 39, '', 215, 15, '', 1, '2022-11-21 12:37:07'),
-(9, 39, '', 216, 15, '', 1, '2022-11-21 12:37:07'),
-(10, 43, '', 214, 11, '', 1, '2022-11-21 12:38:08'),
-(11, 43, '', 215, 10, '', 1, '2022-11-21 12:38:08'),
-(12, 43, '', 216, 17, '', 1, '2022-11-21 12:38:08'),
-(13, 6, '', 214, 16, '', 1, '2022-11-21 12:40:29'),
-(14, 6, '', 215, 9, '', 1, '2022-11-21 12:40:29'),
-(15, 6, '', 216, 16, '', 1, '2022-11-21 12:40:29');
+(5, 38, '', 215, 13, '', 1, '2022-11-21 12:36:32'),
+(6, 38, '', 216, 13, '', 1, '2022-11-21 12:36:32'),
+(7, 39, '', 214, 17, '', 1, '2022-11-21 12:37:07'),
+(8, 39, '', 215, 38, '', 1, '2022-11-21 12:37:07'),
+(9, 39, '', 216, 36, '', 1, '2022-11-21 12:37:07'),
+(10, 43, '', 214, 29, '', 1, '2022-11-21 12:38:08'),
+(11, 43, '', 215, 28, '', 1, '2022-11-21 12:38:08'),
+(12, 43, '', 216, 12, '', 1, '2022-11-21 12:38:08'),
+(13, 6, '', 214, 26, '', 1, '2022-11-21 12:40:29'),
+(14, 6, '', 215, 25, '', 1, '2022-11-21 12:40:29'),
+(15, 6, '', 216, 10, '', 1, '2022-11-21 12:40:29'),
+(16, 2, '', 214, 22, '', 1, '2022-11-21 12:40:29'),
+(17, 2, '', 215, 12, '', 1, '2022-11-21 12:40:29'),
+(18, 2, '', 216, 15, '', 1, '2022-11-21 12:40:29'),
+(19, 3, '', 214, 30, '', 1, '2022-11-21 12:40:29'),
+(20, 3, '', 215, 36, '', 1, '2022-11-21 12:40:29'),
+(21, 3, '', 216, 20, '', 1, '2022-11-21 12:40:29'),
+(22, 4, '', 214, 13, '', 1, '2022-11-21 12:40:29'),
+(23, 4, '', 215, 25, '', 1, '2022-11-21 12:40:29'),
+(24, 4, '', 216, 17, '', 1, '2022-11-21 12:40:29'),
+(25, 5, '', 214, 31, '', 1, '2022-11-21 12:40:29'),
+(26, 5, '', 215, 32, '', 1, '2022-11-21 12:40:29'),
+(27, 5, '', 216, 29, '', 1, '2022-11-21 12:40:29'),
+(28, 7, '', 214, 11, '', 1, '2022-11-21 12:40:29'),
+(29, 7, '', 215, 18, '', 1, '2022-11-21 12:40:29'),
+(30, 7, '', 216, 15, '', 1, '2022-11-21 12:40:29'),
+(31, 8, '', 214, 15, '', 1, '2022-11-21 12:40:29'),
+(32, 8, '', 215, 18, '', 1, '2022-11-21 12:40:29'),
+(33, 8, '', 216, 36, '', 1, '2022-11-21 12:40:29'),
+(34, 9, '', 214, 25, '', 1, '2022-11-21 12:40:29'),
+(35, 9, '', 215, 39, '', 1, '2022-11-21 12:40:29'),
+(36, 9, '', 216, 18, '', 1, '2022-11-21 12:40:29'),
+(37, 10, '', 214, 27, '', 1, '2022-11-21 12:40:29'),
+(38, 10, '', 215, 39, '', 1, '2022-11-21 12:40:29'),
+(39, 10, '', 216, 15, '', 1, '2022-11-21 12:40:29'),
+(40, 11, '', 214, 39, '', 1, '2022-11-21 12:40:29'),
+(41, 11, '', 215, 19, '', 1, '2022-11-21 12:40:29'),
+(42, 11, '', 216, 31, '', 1, '2022-11-21 12:40:29'),
+(43, 12, '', 214, 28, '', 1, '2022-11-21 12:40:29'),
+(44, 12, '', 215, 38, '', 1, '2022-11-21 12:40:29'),
+(45, 12, '', 216, 36, '', 1, '2022-11-21 12:40:29'),
+(46, 13, '', 214, 25, '', 1, '2022-11-21 12:40:29'),
+(47, 13, '', 215, 39, '', 1, '2022-11-21 12:40:29'),
+(48, 13, '', 216, 19, '', 1, '2022-11-21 12:40:29'),
+(49, 14, '', 214, 29, '', 1, '2022-11-21 12:40:29'),
+(50, 14, '', 215, 20, '', 1, '2022-11-21 12:40:29'),
+(51, 14, '', 216, 33, '', 1, '2022-11-21 12:40:29'),
+(52, 15, '', 214, 34, '', 1, '2022-11-21 12:40:29'),
+(53, 15, '', 215, 31, '', 1, '2022-11-21 12:40:29'),
+(54, 15, '', 216, 16, '', 1, '2022-11-21 12:40:29'),
+(55, 16, '', 214, 37, '', 1, '2022-11-21 12:40:29'),
+(56, 16, '', 215, 37, '', 1, '2022-11-21 12:40:29'),
+(57, 16, '', 216, 36, '', 1, '2022-11-21 12:40:29'),
+(58, 17, '', 214, 29, '', 1, '2022-11-21 12:40:29'),
+(59, 17, '', 215, 26, '', 1, '2022-11-21 12:40:29'),
+(60, 17, '', 216, 33, '', 1, '2022-11-21 12:40:29'),
+(61, 18, '', 214, 19, '', 1, '2022-11-21 12:40:29'),
+(62, 18, '', 215, 15, '', 1, '2022-11-21 12:40:29'),
+(63, 18, '', 216, 37, '', 1, '2022-11-21 12:40:29'),
+(64, 19, '', 214, 13, '', 1, '2022-11-21 12:40:29'),
+(65, 19, '', 215, 35, '', 1, '2022-11-21 12:40:29'),
+(66, 19, '', 216, 36, '', 1, '2022-11-21 12:40:29');
 
 -- --------------------------------------------------------
 
@@ -867,7 +918,7 @@ CREATE TABLE `user_login` (
   `level` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_login`
@@ -1066,7 +1117,7 @@ ALTER TABLE `user_detail`
 -- AUTO_INCREMENT for table `user_item`
 --
 ALTER TABLE `user_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `user_login`

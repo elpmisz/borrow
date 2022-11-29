@@ -206,6 +206,27 @@ class Borrow
     return  $stmt->fetchAll();
   }
 
+  public function item_balance($data)
+  {
+    $sql = "SELECT 
+    SUM(CASE WHEN A.type = 1 THEN B.confirm ELSE 0 END) - SUM(CASE WHEN A.type = 2 THEN B.confirm ELSE 0 END) balance
+    FROM request A 
+    LEFT JOIN request_item B 
+    ON A.id = B.request_id
+    LEFT JOIN user_detail C 
+    ON A.user_id = C.id 
+    LEFT JOIN province D 
+    ON C.province_code = D.code
+    WHERE A.status = 3
+    AND D.zone_id = ?
+    AND B.item_id = ?
+    GROUP BY B.item_id";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    $row = $stmt->fetch();
+    return ($row['balance'] ? $row['balance'] : 0);
+  }
+
   public function count_item($data)
   {
     $sql = "SELECT SUM(A.amount) total
@@ -247,6 +268,23 @@ class Borrow
     $stmt->execute($data);
     $row = $stmt->fetch();
     return ($row['total'] ? $row['total'] : 0);
+  }
+
+  public function count_borrow($data)
+  {
+    $sql = "SELECT 
+    SUM(CASE WHEN B.type = 1 THEN A.confirm ELSE 0 END) - SUM(CASE WHEN B.type = 2 THEN A.confirm ELSE 0 END) balance
+    FROM request_item A
+    LEFT JOIN request B
+    ON A.request_id = B.id
+    LEFT JOIN item C
+    ON A.item_id = C.id
+    WHERE B.user_id = ?
+    AND B.status = 3";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    $row = $stmt->fetch();
+    return ($row['balance'] ? $row['balance'] : 0);
   }
 
   public function count_location($data)

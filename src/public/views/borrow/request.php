@@ -5,6 +5,8 @@ $group = "service";
 
 include_once(__DIR__ . "/../../includes/header.php");
 include_once(__DIR__ . "/../../includes/sidebar.php");
+
+$count_borrow = $Borrows->count_borrow([$user_id]);
 ?>
 
 <main id="main" class="main">
@@ -20,7 +22,8 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
             <div class="row mb-2">
               <label class="col-xl-4 col-md-4 col-form-label text-xl-end">หน่วยงาน</label>
               <div class="col-xl-6 col-md-8">
-                <input type="text" class="form-control form-control-sm" value="<?php echo $user['user_name'] ?>" readonly>
+                <input type="text" class="form-control form-control-sm" value="<?php echo $user['user_name'] ?>"
+                  readonly>
               </div>
             </div>
             <div class="row mb-2">
@@ -30,10 +33,12 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
                   <input class="form-check-input" type="radio" name="type" id="active" value="1">
                   <label class="form-check-label text-success" for="active">ยืม</label>
                 </div>
+                <?php if ($count_borrow > 0) : ?>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="type" id="inactive" value="2">
                   <label class="form-check-label text-danger" for="inactive">คืน</label>
                 </div>
+                <?php endif; ?>
               </div>
             </div>
 
@@ -92,13 +97,15 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
                           <button type="button" class="btn btn-sm btn-danger decrease">-</button>
                         </td>
                         <td>
-                          <select class="form-select form-select-sm item" name="item_id[]" data-placeholder="-- เลือก --"></select>
+                          <select class="form-select form-select-sm item" name="item_id[]"
+                            data-placeholder="-- เลือก --"></select>
                           <div class="invalid-feedback">
                             กรุณาเลือกช่องนี้.
                           </div>
                         </td>
                         <td>
-                          <input type="number" class="form-control form-control-sm text-center amount" name="item_amount[]" min="1">
+                          <input type="number" class="form-control form-control-sm text-center amount"
+                            name="item_amount[]" min="1">
                         </td>
                         <td class="text-center">
                           <span class="unit"></span>
@@ -135,16 +142,18 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
                       foreach ($items as $key => $item) :
                         $key++;
                       ?>
-                        <tr>
-                          <td class="text-center"><?php echo $key ?></td>
-                          <td><?php echo $item['item_name'] ?></td>
-                          <td class="text-center"><?php echo $item['balance'] ?></td>
-                          <td>
-                            <input type="hidden" class="form-control form-control-sm text-center" name="borrow_id[]" value="<?php echo $item['item_id'] ?>">
-                            <input type="number" class="form-control form-control-sm text-center" name="borrow_amount[]" value="<?php echo $item['balance'] ?>" min="1" max="<?php echo $item['balance'] ?>">
-                          </td>
-                          <td class="text-center"><?php echo $item['item_unit'] ?></td>
-                        </tr>
+                      <tr>
+                        <td class="text-center"><?php echo $key ?></td>
+                        <td><?php echo $item['item_name'] ?></td>
+                        <td class="text-center"><?php echo $item['balance'] ?></td>
+                        <td>
+                          <input type="hidden" class="form-control form-control-sm text-center" name="borrow_id[]"
+                            value="<?php echo $item['item_id'] ?>">
+                          <input type="number" class="form-control form-control-sm text-center" name="borrow_amount[]"
+                            value="<?php echo $item['balance'] ?>" min="1" max="<?php echo $item['balance'] ?>">
+                        </td>
+                        <td class="text-center"><?php echo $item['item_unit'] ?></td>
+                      </tr>
                       <?php endforeach; ?>
                     </tbody>
                   </table>
@@ -175,6 +184,59 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
 include_once(__DIR__ . "/../../includes/footer.php");
 ?>
 <script>
+$(".item").each(function() {
+  $(this).select2({
+    containerCssClass: "select2--small",
+    dropdownCssClass: "select2--small",
+    dropdownParent: $(this).parent(),
+    width: "100%",
+    allowClear: true,
+    ajax: {
+      url: "/users/itemselect",
+      method: 'POST',
+      dataType: 'json',
+      delay: 100,
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+      cache: true
+    }
+  });
+});
+
+$(document).on("change", ".item", function() {
+  let _this = $(this);
+  let item = $(this).val();
+  $.ajax({
+    url: '/users/itemdetail',
+    method: 'POST',
+    data: {
+      item: item
+    },
+    dataType: 'json',
+    success: function(data) {
+      _this.closest("tr").find(".unit").text(data.item_unit);
+      _this.closest("tr").find(".amount").prop("required", true)
+    },
+  });
+});
+
+$(".decrease").hide();
+$(document).on("click", ".increase", function() {
+  $(".item").select2("destroy");
+  let row = $(".tr_add:last");
+  let clone = row.clone();
+  clone.find("input, select").val("");
+  clone.find(".increase").hide();
+  clone.find(".decrease").show();
+  clone.find(".decrease").on("click", function() {
+    $(this).closest("tr").remove();
+  });
+  row.after(clone);
+  clone.show();
+
   $(".item").each(function() {
     $(this).select2({
       containerCssClass: "select2--small",
@@ -196,127 +258,74 @@ include_once(__DIR__ . "/../../includes/footer.php");
       }
     });
   });
+});
 
-  $(document).on("change", ".item", function() {
-    let _this = $(this);
-    let item = $(this).val();
-    $.ajax({
-      url: '/users/itemdetail',
-      method: 'POST',
-      data: {
-        item: item
-      },
-      dataType: 'json',
-      success: function(data) {
-        _this.closest("tr").find(".unit").text(data.item_unit);
-        _this.closest("tr").find(".amount").prop("required", true)
-      },
-    });
-  });
+$(".date_borrow, .date_return").on('keydown paste', function(e) {
+  e.preventDefault();
+});
 
-  $(".decrease").hide();
-  $(document).on("click", ".increase", function() {
-    $(".item").select2("destroy");
-    let row = $(".tr_add:last");
-    let clone = row.clone();
-    clone.find("input, select").val("");
-    clone.find(".increase").hide();
-    clone.find(".decrease").show();
-    clone.find(".decrease").on("click", function() {
-      $(this).closest("tr").remove();
-    });
-    row.after(clone);
-    clone.show();
+$(".date_borrow").daterangepicker({
+  autoUpdateInput: false,
+  showDropdowns: true,
+  locale: {
+    "format": "DD/MM/YYYY",
+    "applyLabel": "ยืนยัน",
+    "cancelLabel": "ยกเลิก",
+    "daysOfWeek": [
+      "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+    ],
+    "monthNames": [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ]
+  },
+  "applyButtonClasses": "btn-success",
+  "cancelClass": "btn-danger"
+});
 
-    $(".item").each(function() {
-      $(this).select2({
-        containerCssClass: "select2--small",
-        dropdownCssClass: "select2--small",
-        dropdownParent: $(this).parent(),
-        width: "100%",
-        allowClear: true,
-        ajax: {
-          url: "/users/itemselect",
-          method: 'POST',
-          dataType: 'json',
-          delay: 100,
-          processResults: function(data) {
-            return {
-              results: data
-            };
-          },
-          cache: true
-        }
-      });
-    });
-  });
+$(".date_return").daterangepicker({
+  singleDatePicker: true,
+  showDropdowns: true,
+  locale: {
+    "format": "DD/MM/YYYY",
+    "applyLabel": "ยืนยัน",
+    "cancelLabel": "ยกเลิก",
+    "daysOfWeek": [
+      "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+    ],
+    "monthNames": [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ]
+  },
+  "applyButtonClasses": "btn-success",
+  "cancelClass": "btn-danger"
+});
 
-  $(".date_borrow, .date_return").on('keydown paste', function(e) {
-    e.preventDefault();
-  });
+$(".date_borrow").on("apply.daterangepicker", function(ev, picker) {
+  $(this).val(picker.startDate.format("DD/MM/YYYY") + " - " + picker.endDate.format("DD/MM/YYYY"));
+});
 
-  $(".date_borrow").daterangepicker({
-    autoUpdateInput: false,
-    showDropdowns: true,
-    locale: {
-      "format": "DD/MM/YYYY",
-      "applyLabel": "ยืนยัน",
-      "cancelLabel": "ยกเลิก",
-      "daysOfWeek": [
-        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
-      ],
-      "monthNames": [
-        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
-      ]
-    },
-    "applyButtonClasses": "btn-success",
-    "cancelClass": "btn-danger"
-  });
+$(".date_borrow").on("cancel.daterangepicker", function(ev, picker) {
+  $(this).val("");
+});
 
-  $(".date_return").daterangepicker({
-    singleDatePicker: true,
-    showDropdowns: true,
-    locale: {
-      "format": "DD/MM/YYYY",
-      "applyLabel": "ยืนยัน",
-      "cancelLabel": "ยกเลิก",
-      "daysOfWeek": [
-        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
-      ],
-      "monthNames": [
-        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
-      ]
-    },
-    "applyButtonClasses": "btn-success",
-    "cancelClass": "btn-danger"
-  });
-
-  $(".date_borrow").on("apply.daterangepicker", function(ev, picker) {
-    $(this).val(picker.startDate.format("DD/MM/YYYY") + " - " + picker.endDate.format("DD/MM/YYYY"));
-  });
-
-  $(".date_borrow").on("cancel.daterangepicker", function(ev, picker) {
-    $(this).val("");
-  });
-
-  $(".div_borrow, .div_return").hide();
-  $(document).on("click", "input[name='type']", function() {
-    let type = parseInt($(this).val());
-    $(".date").val("");
-    if (type === 1) {
-      $(".text").text("จุดประสงค์การยืม");
-      $(".item, .date_borrow").prop("required", true);
-      $(".date_return").prop("required", false);
-      $(".div_borrow").show();
-      $(".div_return").hide();
-    } else {
-      $(".text").text("รายละเอียดเพิ่มเติม");
-      $(".item, .date_borrow").prop("required", false);
-      $(".date_return").prop("required", true);
-      $(".div_borrow").hide();
-      $(".div_return").show();
-    }
-  });
+$(".div_borrow, .div_return").hide();
+$(document).on("click", "input[name='type']", function() {
+  let type = parseInt($(this).val());
+  $(".date").val("");
+  if (type === 1) {
+    $(".text").text("จุดประสงค์การยืม");
+    $(".item, .date_borrow").prop("required", true);
+    $(".date_return").prop("required", false);
+    $(".div_borrow").show();
+    $(".div_return").hide();
+  } else {
+    $(".text").text("รายละเอียดเพิ่มเติม");
+    $(".item, .date_borrow").prop("required", false);
+    $(".date_return").prop("required", true);
+    $(".div_borrow").hide();
+    $(".div_return").show();
+  }
+});
 </script>

@@ -29,7 +29,9 @@ ON A.user_id = B.id
 LEFT JOIN province C 
 ON B.province_code = C.code 
 LEFT JOIN item D
-ON A.item_id = D.id ";
+ON A.item_id = D.id
+LEFT JOIN user_login E
+ON A.user_id = E.user_id ";
 
 if ($keyword) {
   $sql .= " AND (A.name LIKE '%{$keyword}%' OR A.email LIKE '%{$keyword}%' OR B.name LIKE '%{$keyword}%') ";
@@ -38,7 +40,7 @@ if ($keyword) {
 if ($order) {
   $sql .= "ORDER BY {$column[$order_column]} {$order_dir} ";
 } else {
-  $sql .= "ORDER BY C.zone_id ASC, A.user_id ASC, A.item_id ASC ";
+  $sql .= "ORDER BY E.level DESC, C.zone_id ASC, A.user_id ASC, A.item_id ASC ";
 }
 
 $query = "";
