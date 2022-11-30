@@ -74,6 +74,9 @@ $Router->map("POST", "/items/data", function () {
 $Router->map("GET", "/items/request", function () {
   require(__DIR__ . "/views/items/request.php");
 });
+$Router->map("GET", "/items/form", function () {
+  require(__DIR__ . "/views/items/form.php");
+});
 $Router->map("GET", "/items/view/[**:params]", function ($params) {
   require(__DIR__ . "/views/items/view.php");
 });

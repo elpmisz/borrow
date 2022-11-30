@@ -30,7 +30,8 @@ $limit_start = (isset($_POST['start']) ? $_POST['start'] : "");
 $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
 $draw = (isset($_POST['draw']) ? $_POST['draw'] : "");
 
-$sql = "SELECT A.id request_id,A.text,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,
+$sql = "SELECT A.id request_id,A.text,
+A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,IF(A.type = 1,'primary','danger') type_color,
 CONCAT(B.name,' [',F.zone_id,']') user_name,
 GROUP_CONCAT(CONCAT(D.name,' [ ',C.amount,' ',D.unit,' ]')) item,
 CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ', DATE_FORMAT(A.end, '%d/%m/%Y')) date_borrow,
@@ -91,11 +92,14 @@ $data = [];
 foreach ($result as $row) {
   if (!empty($row['request_id'])) {
     $status = "<a href='/borrow/complete/{$row['request_id']}' target='_blank'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
+
+    $type = "<span class='badge text-bg-{$row['type_color']} fw-lighter'>{$row['type_name']}</span>";
+
     $data[] = [
       "0" => $status,
       "1" => $row['user_name'],
       "2" => $row['text'],
-      "3" => $row['type_name'],
+      "3" => $type,
       "4" => str_replace(",", "<br>", $row['item']),
       "5" => ($row['type_id'] === 1 ? str_replace("-", ",<br>", $row['date_borrow']) : $row['date_return']),
       "6" => str_replace("-", ",<br>", $row['created']),
