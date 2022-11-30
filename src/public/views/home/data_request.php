@@ -14,7 +14,7 @@ $user_id = (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : "");
 $Users = new User();
 $user = $Users->user_id_fetch([$user_id]);
 
-$stmt = $dbcon->prepare("SELECT COUNT(*) FROM request WHERE status = 1");
+$stmt = $dbcon->prepare("SELECT COUNT(*) FROM request");
 $stmt->execute();
 $count = $stmt->fetchColumn();
 
@@ -30,11 +30,27 @@ $limit_start = (isset($_POST['start']) ? $_POST['start'] : "");
 $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
 $draw = (isset($_POST['draw']) ? $_POST['draw'] : "");
 
-$sql = "SELECT A.id request_id,A.text,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,B.name user_name,
+$sql = "SELECT A.id request_id,A.text,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,
+CONCAT(B.name,' [',F.zone_id,']') user_name,
 GROUP_CONCAT(CONCAT(D.name,' [ ',C.amount,' ',D.unit,' ]')) item,
 CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ', DATE_FORMAT(A.end, '%d/%m/%Y')) date_borrow,
 DATE_FORMAT(A.start, '%d/%m/%Y') date_return,
-DATE_FORMAT(A.created, '%d/%m/%Y - %H:%i น.') created
+DATE_FORMAT(A.created, '%d/%m/%Y - %H:%i น.') created,
+A.status,
+CASE A.status
+  WHEN 1 THEN 'รออนุมัติ'
+  WHEN 2 THEN 'รอรับคืน'
+  WHEN 3 THEN 'ดำเนินการเรียบร้อย'
+  WHEN 4 THEN 'ยกเลิก'
+  ELSE NULL
+END status_name,
+CASE A.status
+  WHEN 1 THEN 'primary'
+  WHEN 2 THEN 'primary'
+  WHEN 3 THEN 'success'
+  WHEN 4 THEN 'danger'
+  ELSE NULL
+END status_color
 FROM request A
 LEFT JOIN user_detail B
 ON A.user_id = B.id
@@ -45,14 +61,7 @@ ON C.item_id = D.id
 LEFT JOIN user_login E
 ON A.user_id = E.user_id
 LEFT JOIN province F 
-ON B.province_code = F.code
-WHERE A.status IN (1,2) ";
-
-if ($user['user_level'] === 9) {
-  $sql .= " AND E.level = 2 ";
-} else {
-  $sql .= " AND E.level = 1 AND F.zone_id = {$user['zone_id']} ";
-}
+ON B.province_code = F.code";
 
 if ($keyword) {
   $sql .= " AND (A.text LIKE '%{$keyword}%' OR D.name LIKE '%{$keyword}%') ";
@@ -81,7 +90,7 @@ $result = $stmt->fetchAll();
 $data = [];
 foreach ($result as $row) {
   if (!empty($row['request_id'])) {
-    $status = "<a href='/borrow/approve/{$row['request_id']}'><span class='badge text-bg-primary fw-lighter'>รอดำเนินการ</span></a>";
+    $status = "<a href='/borrow/complete/{$row['request_id']}' target='_blank'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
     $data[] = [
       "0" => $status,
       "1" => $row['user_name'],

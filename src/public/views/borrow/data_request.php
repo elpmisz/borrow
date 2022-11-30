@@ -31,7 +31,6 @@ GROUP_CONCAT(CONCAT(D.name,' [ ',C.amount,' ',D.unit,' ]')) item,
 CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ', DATE_FORMAT(A.end, '%d/%m/%Y')) date_borrow,
 DATE_FORMAT(A.start, '%d/%m/%Y') date_return,
 DATE_FORMAT(A.created, '%d/%m/%Y - %H:%i น.') created,
-
 A.status,
 CASE A.status
   WHEN 1 THEN 'รออนุมัติ'
@@ -86,7 +85,7 @@ foreach ($result as $row) {
     if (in_array($row['status'], [1, 2])) {
       $status = "<a href='/borrow/view/{$row['request_id']}'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
     } else {
-      $status = "<a href='/borrow/complete/{$row['request_id']}'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
+      $status = "<a href='/borrow/complete/{$row['request_id']}' target='_blank'><span class='badge text-bg-{$row['status_color']} fw-lighter'>{$row['status_name']}</span></a>";
     }
 
     $type = "<span class='badge text-bg-{$row['type_color']} fw-lighter'>{$row['type_name']}</span>";

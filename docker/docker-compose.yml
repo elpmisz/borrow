@@ -4,8 +4,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    environment:
-      - TZ=Asia/Bangkok
     container_name: borrow-app
     restart: unless-stopped
     working_dir: /var/www/
@@ -31,6 +29,7 @@ services:
     command: ['--sql_mode=']
     environment:
       MARIADB_ROOT_PASSWORD: P@ssw0rd#db
+      TZ: "Asia/Bangkok"
 
   phpmyadmin:
     image: phpmyadmin:latest

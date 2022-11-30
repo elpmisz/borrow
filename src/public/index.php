@@ -119,6 +119,9 @@ $Router->map("POST", "/provinceitem", function () {
 $Router->map("POST", "/zoneitem", function () {
   require(__DIR__ . "/views/home/data_item_zone.php");
 });
+$Router->map("POST", "/requestdata", function () {
+  require(__DIR__ . "/views/home/data_request.php");
+});
 $Router->map("POST", "/dashboard/[**:params]", function ($params) {
   require(__DIR__ . "/views/home/action_dashboard.php");
 });

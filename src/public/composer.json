@@ -1,5 +1,5 @@
 {
-  "name": "worachit.pa/templates",
+  "name": "worachit.pa/borrow",
   "autoload": {
     "psr-4": {
       "app\\": "./"

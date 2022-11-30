@@ -172,8 +172,8 @@ $count_location = $Borrows->count_location([$request_id]);
 
             <div class="row justify-content-center mb-2">
               <div class="col-xl-3 col-md-6">
-                <a href="/borrow" class="btn btn-danger btn-sm w-100">
-                  <i class="fa fa-arrow-left pe-2"></i>กลับหน้าหลัก
+                <a href="javascript:void(0)" class="btn btn-danger btn-sm w-100 btn_close">
+                  <i class="fa fa-times pe-2"></i>ปิด
                 </a>
               </div>
             </div>
@@ -187,6 +187,12 @@ $count_location = $Borrows->count_location([$request_id]);
 <?php
 include_once(__DIR__ . "/../../includes/footer.php");
 ?>
+<script>
+  $(document).on("click", ".btn_close", function() {
+    window.opener = self;
+    window.close();
+  });
+</script>
 <?php if ($row['type_id'] === 1 && $count_location > 0) : ?>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaCQJfnRNiel1cPN93BlAzFP3uQset6hs&callback=initMap" async defer></script>
   <script>

@@ -6,6 +6,7 @@ $group = "service";
 include_once(__DIR__ . "/../../includes/header.php");
 include_once(__DIR__ . "/../../includes/sidebar.php");
 
+$count_borrow = $Borrows->count_borrow([$user_id]);
 ?>
 
 <main id="main" class="main">
@@ -19,14 +20,6 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
         <div class="card-body">
 
           <div class="row justify-content-end">
-            <?php if (in_array($user['user_level'], [2, 9])) : ?>
-              <div class="col-xl-3 col-md-6 mb-2">
-                <a href="/borrow/manage" class="btn btn-primary btn-sm w-100">
-                  <i class="fa fa-file-alt pe-2"></i>จัดการระบบ
-                </a>
-              </div>
-            <?php endif; ?>
-
             <div class="col-xl-3 col-md-6 mb-2">
               <a href="/borrow/request" class="btn btn-danger btn-sm w-100">
                 <i class="fa fa-plus pe-2"></i>ใช้บริการ
@@ -34,28 +27,30 @@ include_once(__DIR__ . "/../../includes/sidebar.php");
             </div>
           </div>
 
-          <div class="card shadow my-2">
-            <div class="card-header">
-              <h4 class="text-center">รายการอุปกรณ์ที่ยืม</h4>
-            </div>
-            <div class="card-body">
-              <div class="row my-3">
-                <div class="col-xl-12">
-                  <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-sm borrow w-100">
-                      <thead>
-                        <tr>
-                          <th width="50%">อุปกรณ์</th>
-                          <th width="10%">จำนวน</th>
-                          <th width="10%">หน่วยนับ</th>
-                        </tr>
-                      </thead>
-                    </table>
+          <?php if ($count_borrow > 0) : ?>
+            <div class="card shadow my-2">
+              <div class="card-header">
+                <h4 class="text-center">รายการอุปกรณ์ที่ยืม</h4>
+              </div>
+              <div class="card-body">
+                <div class="row my-3">
+                  <div class="col-xl-12">
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-hover table-sm borrow w-100">
+                        <thead>
+                          <tr>
+                            <th width="50%">อุปกรณ์</th>
+                            <th width="10%">จำนวน</th>
+                            <th width="10%">หน่วยนับ</th>
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          <?php endif; ?>
 
           <?php
           $count = $Borrows->auth_request($user['user_level'], $user['zone_id']);
