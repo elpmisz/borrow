@@ -121,7 +121,8 @@ class Borrow
 
   public function request_fetch($data)
   {
-    $sql = "SELECT A.id request_id,A.user_id,B.name user_name,A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,A.text,
+    $sql = "SELECT A.id request_id,A.user_id,B.name user_name,D.zone_id,
+    A.type type_id,IF(A.type = 1,'ยืม','คืน') type_name,A.text,
     CONCAT(DATE_FORMAT(A.start, '%d/%m/%Y'),' - ',DATE_FORMAT(A.end, '%d/%m/%Y')) date_borrow,
     DATE_FORMAT(A.start, '%d/%m/%Y') date_return,
     C.name approver_name,DATE_FORMAT(A.approve_datetime, '[ %d/%m/%Y, %H:%i น. ]') approve_datetime,A.approve_text,
@@ -137,6 +138,8 @@ class Borrow
     ON A.user_id = B.id
     LEFT JOIN user_detail C
     ON A.approver = C.id
+    LEFT JOIN province D 
+    ON C.province_code = D.code
     WHERE A.id = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);

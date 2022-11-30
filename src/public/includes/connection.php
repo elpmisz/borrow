@@ -2,6 +2,9 @@
 $dbhost = "database";
 $dbuser = "root";
 $dbpass = "P@ssw0rd#db";
+// $dbhost = "localhost";
+// $dbuser = "promptdev";
+// $dbpass = "So6j,12QWASZX";
 $dbname = "borrow";
 $dbchar = "utf8";
 

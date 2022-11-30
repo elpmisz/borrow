@@ -11,6 +11,9 @@ class Database
   private $dbHost = "database";
   private $dbUser = "root";
   private $dbPass = "P@ssw0rd#db";
+  // private $dbHost = "localhost";
+  // private $dbUser = "promptdev";
+  // private $dbPass = "So6j,12QWASZX";
   private $dbName = "borrow";
   private $dbChar = "utf8";
   private $dbOptions = [

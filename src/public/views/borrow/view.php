@@ -11,7 +11,7 @@ $request_id = (!empty($param[0]) ? $param[0] : "");
 
 $row = $Borrows->request_fetch([$request_id]);
 $items = ($row['type_id'] === 1
-  ? $Borrows->item_fetch([$user['zone_id'], $request_id], $row['user_id'])
+  ? $Borrows->item_fetch([$row['zone_id'], $request_id], $row['user_id'])
   : $Borrows->item_return_fetch([$row['user_id']], $request_id));
 ?>
 
