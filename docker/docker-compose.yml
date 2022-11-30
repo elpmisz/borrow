@@ -21,14 +21,14 @@ services:
       - ./nginx:/etc/nginx/conf.d
 
   database:
-    image: mariadb:latest
+    image: mysql:5.7
     container_name: borrow-database
     restart: unless-stopped
     ports:
       - 3309:3306
     command: ['--sql_mode=']
     environment:
-      MARIADB_ROOT_PASSWORD: P@ssw0rd#db
+      MYSQL_ROOT_PASSWORD: P@ssw0rd#db
       TZ: "Asia/Bangkok"
 
   phpmyadmin:

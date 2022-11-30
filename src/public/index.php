@@ -5,6 +5,9 @@ $Router = new AltoRouter();
 $Router->map("GET", "/", function () {
   require(__DIR__ . "/views/home/login.php");
 });
+$Router->map("GET", "/info", function () {
+  require(__DIR__ . "/views/home/info.php");
+});
 $Router->map("GET", "/home", function () {
   require(__DIR__ . "/views/home/index.php");
 });
@@ -55,6 +58,9 @@ $Router->map("GET", "/users/item", function () {
 $Router->map("GET", "/users/view/[**:params]", function ($params) {
   require(__DIR__ . "/views/users/view.php");
 });
+$Router->map("GET", "/users/excel/[**:params]", function ($params) {
+  require(__DIR__ . "/views/users/excel.php");
+});
 $Router->map("POST", "/users/[**:params]", function ($params) {
   require(__DIR__ . "/views/users/action.php");
 });
@@ -70,6 +76,9 @@ $Router->map("GET", "/items/request", function () {
 });
 $Router->map("GET", "/items/view/[**:params]", function ($params) {
   require(__DIR__ . "/views/items/view.php");
+});
+$Router->map("GET", "/items/excel/[**:params]", function ($params) {
+  require(__DIR__ . "/views/items/excel.php");
 });
 $Router->map("POST", "/items/[**:params]", function ($params) {
   require(__DIR__ . "/views/items/action.php");

@@ -23,12 +23,20 @@ if ($user['user_level'] === 1) {
 
           <div class="row">
             <div class="col-xl-3 col-md-6 mb-2">
-              <a href="javascript:void(0)" class="btn btn-success btn-sm w-100 btn_report">
+              <a href="javascript:void(0)" class="btn btn-success btn-sm w-100 btn_excel">
                 <i class="fa fa-file-alt pe-2"></i>รายงาน
               </a>
             </div>
 
-            <div class="col-xl-3 col-md-6 offset-xl-6 mb-2">
+            <div class="col-xl-3 col-md-6 offset-xl-3 mb-2">
+              <select class="form-select form-select-sm w-100 type_filter" data-placeholder="-- เลือก --">
+                <option value="">-- เลือก --</option>
+                <option value="1">หลัก</option>
+                <option value="2">รอง</option>
+              </select>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-2">
               <a href="/items/request" class="btn btn-danger btn-sm w-100">
                 <i class="fa fa-plus pe-2"></i>เพิ่ม
               </a>
@@ -64,7 +72,7 @@ include_once(__DIR__ . "/../../includes/footer.php");
 <script>
   filter_data();
 
-  function filter_data(status) {
+  function filter_data(type) {
     let data = $(".data").DataTable({
       serverSide: true,
       scrollX: true,
@@ -74,7 +82,7 @@ include_once(__DIR__ . "/../../includes/footer.php");
         url: "/items/data",
         type: "POST",
         data: {
-          status: status
+          type: type
         }
       },
       columnDefs: [{
@@ -96,16 +104,31 @@ include_once(__DIR__ . "/../../includes/footer.php");
         }
       }
     });
-  }
+  };
 
-  $(document).on("click", ".count", function() {
-    let status = $(this).prop("id");
-    if (status) {
+  $(document).on("change", ".type_filter", function() {
+    let type = $(this).val();
+    if (type) {
       $(".data").DataTable().destroy();
-      filter_data(status);
+      filter_data(type);
     } else {
       $(".data").DataTable().destroy();
       filter_data();
     }
+  });
+
+  $(".type_filter").each(function() {
+    $(this).select2({
+      containerCssClass: "select2--small",
+      dropdownCssClass: "select2--small",
+      dropdownParent: $(this).parent(),
+      width: "100%",
+      allowClear: true,
+    });
+  });
+
+  $(document).on("click", ".btn_excel", function() {
+    let type = ($(".type_filter").val() ? $(".type_filter").val() : "");
+    window.open("/items/excel/" + type + "/");
   });
 </script>

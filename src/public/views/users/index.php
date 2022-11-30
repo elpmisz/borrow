@@ -60,7 +60,7 @@ if ($user['user_level'] === 1) {
 
           <div class="row">
             <div class="col-xl-3 col-md-6 mb-2">
-              <a href="javascript:void(0)" class="btn btn-success btn-sm w-100 btn_report">
+              <a href="javascript:void(0)" class="btn btn-success btn-sm w-100 btn_excel">
                 <i class="fa fa-file-alt pe-2"></i>รายงาน
               </a>
             </div>
@@ -157,7 +157,6 @@ include_once(__DIR__ . "/../../includes/footer.php");
     let status = 1;
     let zone = $(this).val();
 
-    console.log(status + " / " + zone)
     if (status || zone) {
       $(".data").DataTable().destroy();
       filter_data(status, zone);
@@ -187,5 +186,10 @@ include_once(__DIR__ . "/../../includes/footer.php");
         cache: true
       }
     });
+  });
+
+  $(document).on("click", ".btn_excel", function() {
+    let zone = ($(".zone_filter").val() ? $(".zone_filter").val() : "");
+    window.open("/users/excel/" + zone + "/");
   });
 </script>

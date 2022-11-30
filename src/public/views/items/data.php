@@ -14,7 +14,7 @@ $count = $stmt->fetchColumn();
 
 $column = ["A.status", "A.name", "A.reference", "A.unit"];
 
-$status = (isset($_POST['status']) ? intval($_POST['status']) : "");
+$type = (isset($_POST['type']) ? intval($_POST['type']) : "");
 
 $keyword = (isset($_POST['search']['value']) ? $_POST['search']['value'] : "");
 $order = (isset($_POST['order']) ? $_POST['order'] : "");
@@ -30,7 +30,12 @@ IF(A.status = 1,'รายละเอียด','ระงับการใช
 IF(A.status = 1,'success','danger') status_color
 FROM item A 
 LEFT JOIN item B
-ON A.reference = B.id ";
+ON A.reference = B.id
+WHERE A.id != ''  ";
+
+if ($type) {
+  $sql .= " AND A.type = {$type} ";
+}
 
 
 if ($keyword) {
